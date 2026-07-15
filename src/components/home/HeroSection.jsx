@@ -2,6 +2,8 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowDown } from 'lucide-react';
+import ShootingStars from '@/components/ui/ShootingStars';
+import FloatingOrb from '@/components/ui/FloatingOrb';
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
@@ -9,20 +11,29 @@ export default function HeroSection() {
   const contentY = useTransform(scrollY, [0, 500], [0, 60]);
 
   return (
-    <section className="relative h-screen overflow-hidden bg-white">
-      {/* Soft pearlescent background — the only ambient layer */}
+    <section className="relative h-screen overflow-hidden" style={{ background: '#050807' }}>
+      {/* Deep space gradient base */}
       <div className="absolute inset-0" style={{
-        background: 'linear-gradient(135deg, #ffffff 0%, #f0fdf8 30%, #ecfdf5 55%, #ffffff 100%)',
-      }} />
-      <div className="absolute inset-0" style={{
-        background: 'radial-gradient(ellipse at 50% 40%, rgba(52,211,153,0.10) 0%, transparent 65%)',
+        background: 'radial-gradient(ellipse at 60% 20%, #0d1f16 0%, #060b09 45%, #030504 100%)',
       }} />
 
-      {/* Fine dot grid, very quiet */}
+      {/* Distant floating sun */}
+      <FloatingOrb size={520} top="18%" left="72%" />
+      <FloatingOrb size={280} top="80%" left="12%" colorFrom="rgba(16,185,129,0.35)" colorVia="rgba(5,150,105,0.12)" drift={18} />
+
+      {/* Real shooting stars + fixed starfield */}
+      <ShootingStars starCount={110} shooters={5} />
+
+      {/* Fine grid, quiet */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.035]"
-        style={{ backgroundImage: 'radial-gradient(circle, #141414 1px, transparent 1px)', backgroundSize: '44px 44px' }}
+        className="absolute inset-0 pointer-events-none opacity-[0.05]"
+        style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '48px 48px' }}
       />
+
+      {/* Vignette for depth */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
+      }} />
 
       {/* Hero content */}
       <motion.div
@@ -33,7 +44,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.7 }}
-          className="font-mono text-xs uppercase tracking-[0.4em] text-emerald-600/70 mb-8"
+          className="font-mono text-xs uppercase tracking-[0.4em] text-emerald-400/80 mb-8"
         >
           Lacey, WA
         </motion.p>
@@ -45,13 +56,21 @@ export default function HeroSection() {
           transition={{ delay: 0.15, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-center leading-none mb-10"
         >
-          <span className="font-display font-bold tracking-tighter text-foreground text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
+          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
             Green
           </span>
-          <span className="font-display font-bold tracking-tighter text-foreground text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
+          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
             Side
           </span>
-          <span className="font-display font-bold tracking-tighter text-velvet italic text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
+          <span
+            className="font-display font-bold tracking-tighter italic text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]"
+            style={{
+              background: 'linear-gradient(90deg, #34d399 0%, #a7f3d0 50%, #34d399 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: 'drop-shadow(0 0 24px rgba(52,211,153,0.35))',
+            }}
+          >
             Designs
           </span>
         </motion.div>
@@ -64,13 +83,14 @@ export default function HeroSection() {
         >
           <Link
             to="/contact"
-            className="font-mono text-xs uppercase tracking-[0.2em] bg-velvet text-white px-8 py-4 hover:bg-emerald-500 transition-all duration-300 rounded-sm shadow-lg shadow-emerald-900/15"
+            className="font-mono text-xs uppercase tracking-[0.2em] bg-emerald-400 text-[#052015] px-8 py-4 hover:bg-emerald-300 transition-all duration-300 rounded-sm shadow-lg"
+            style={{ boxShadow: '0 0 30px rgba(52,211,153,0.35)' }}
           >
             Start Your Project
           </Link>
           <Link
             to="/services"
-            className="font-mono text-xs uppercase tracking-[0.2em] border border-velvet/30 px-8 py-4 text-foreground hover:bg-emerald-50 transition-all duration-300 rounded-sm"
+            className="font-mono text-xs uppercase tracking-[0.2em] border border-white/20 px-8 py-4 text-white hover:bg-white/5 transition-all duration-300 rounded-sm backdrop-blur-sm"
           >
             View Pricing
           </Link>
@@ -83,7 +103,7 @@ export default function HeroSection() {
         transition={{ repeat: Infinity, duration: 2 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10"
       >
-        <ArrowDown className="w-4 h-4 text-foreground/30" />
+        <ArrowDown className="w-4 h-4 text-white/40" />
       </motion.div>
     </section>
   );

@@ -158,9 +158,9 @@ export default function Contact() {
                       <SelectValue placeholder="Select a service" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border-border rounded-md">
-                      <SelectItem value="website_creation">Website Creation — $300</SelectItem>
-                      <SelectItem value="website_moderation">Website Moderation — $30/mo</SelectItem>
-                      <SelectItem value="bundle">Bundle Package — $400</SelectItem>
+                      <SelectItem value="website_creation">Website Creation — $400</SelectItem>
+                      <SelectItem value="website_moderation">6-Month Moderation — $120</SelectItem>
+                      <SelectItem value="bundle">Bundle Package — $500</SelectItem>
                       <SelectItem value="other">Other / Not Sure</SelectItem>
                     </SelectContent>
                   </Select>
