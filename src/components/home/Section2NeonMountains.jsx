@@ -15,8 +15,14 @@ function NeonWaterfall({ dropProgress }) {
 
   return (
     <motion.div
-      className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-none"
-      style={{ height: useTransform(dropProgress, [0, 1], ['0%', '160%']), width: 40, overflow: 'visible' }}
+      className="absolute pointer-events-none"
+      style={{
+        right: '12%',
+        bottom: 0,
+        height: useTransform(dropProgress, [0, 1], ['0%', '160%']),
+        width: 40,
+        overflow: 'visible',
+      }}
     >
       {dots.map((d, i) => (
         <motion.div
@@ -37,11 +43,15 @@ function NeonWaterfall({ dropProgress }) {
   );
 }
 
+// The realistic ridge line — organic, uneven peaks, not uniform triangles.
+// One path, reused for the mountain body, its glowing ridge, and (flipped)
+// the lake's reflection, so the lean and shape always match exactly.
+const RIDGE_PATH = 'M0,340 C40,300 55,250 90,230 C130,208 150,260 190,235 C230,210 250,120 300,95 C350,72 380,150 430,175 C480,200 520,110 580,90 C640,72 670,180 730,205 C790,230 830,140 890,120 C950,102 990,210 1050,230 C1110,250 1150,160 1210,150 C1270,140 1310,230 1370,245 C1410,255 1430,220 1440,210';
+
 export default function Section2NeonMountains() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
 
-  // Expand in as you scroll into the section, de-expand as you leave
   const contentScale = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0.75, 1, 1, 0.8]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const dropProgress = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
@@ -71,92 +81,75 @@ export default function Section2NeonMountains() {
 
       <motion.div style={{ scale: contentScale, opacity: contentOpacity }} className="absolute inset-0">
         {/* Lettering */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6" style={{ marginTop: '-8%' }}>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-fuchsia-300/80 mb-4">From idea to launch</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold text-white leading-tight max-w-lg">
             No detours. Just a straight line to launch.
           </h2>
         </div>
 
-        {/* Realistic layered mountain silhouettes with a neon-glowing ridge line */}
-        <svg viewBox="0 0 1440 500" preserveAspectRatio="none" className="absolute" style={{ bottom: '32%', left: 0, width: '100%', height: '55%' }}>
-          <defs>
-            <linearGradient id="farMountainFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#2a1a52" />
-              <stop offset="100%" stopColor="#160c30" />
-            </linearGradient>
-            <linearGradient id="nearMountainFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#180a2e" />
-              <stop offset="100%" stopColor="#0a0518" />
-            </linearGradient>
-          </defs>
-
-          {/* Far range — hazier, lower contrast, atmospheric perspective */}
-          <path
-            d="M0,500 L0,300 L60,235 L95,270 L150,175 L210,255 L270,140 L330,240 L400,150 L460,235 L530,120 L600,225 L670,160 L740,235 L810,130 L880,220 L950,175 L1020,240 L1090,150 L1160,230 L1230,170 L1300,235 L1370,190 L1440,220 L1440,500 Z"
-            fill="url(#farMountainFill)"
-            opacity="0.7"
-          />
-          <path
-            d="M0,300 L60,235 L95,270 L150,175 L210,255 L270,140 L330,240 L400,150 L460,235 L530,120 L600,225 L670,160 L740,235 L810,130 L880,220 L950,175 L1020,240 L1090,150 L1160,230 L1230,170 L1300,235 L1370,190 L1440,220"
-            fill="none"
-            stroke="#7a2fff"
-            strokeWidth="1.5"
-            opacity="0.45"
-            filter="url(#mountainStatic)"
-            style={{ filter: 'url(#mountainStatic) drop-shadow(0 0 5px #7a2fff)' }}
-          />
-
-          {/* Near range — sharper, darker body, brighter glowing ridge */}
-          <path
-            d="M0,500 L0,360 L45,300 L85,345 L130,255 L180,335 L240,225 L300,330 L365,235 L430,345 L500,220 L565,335 L630,245 L700,350 L770,235 L840,340 L905,255 L975,345 L1045,230 L1115,335 L1185,255 L1255,340 L1330,265 L1400,330 L1440,300 L1440,500 Z"
-            fill="url(#nearMountainFill)"
-          />
-          <path
-            d="M0,360 L45,300 L85,345 L130,255 L180,335 L240,225 L300,330 L365,235 L430,345 L500,220 L565,335 L630,245 L700,350 L770,235 L840,340 L905,255 L975,345 L1045,230 L1115,335 L1185,255 L1255,340 L1330,265 L1400,330 L1440,300"
-            fill="none"
-            stroke="#ff2fd6"
-            strokeWidth="2.5"
-            filter="url(#mountainStatic)"
-            style={{ filter: 'url(#mountainStatic) drop-shadow(0 0 8px #ff2fd6) drop-shadow(0 0 18px #ff2fd6)' }}
-          />
-        </svg>
-
-        {/* 3D perspective lake */}
-        <div className="absolute bottom-0 left-0 w-full" style={{ height: '32%', overflow: 'hidden' }}>
-          <div className="absolute inset-0" style={{
-            background: 'linear-gradient(180deg, rgba(122,47,255,0.18) 0%, rgba(255,47,214,0.12) 40%, transparent 90%)',
-          }} />
-          <svg viewBox="0 0 1440 200" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full" style={{ transform: 'scaleY(-1)', opacity: 0.35 }}>
-            <polyline
-              points="0,200 50,90 110,150 170,40 230,140 300,20 370,130 440,30 520,140 590,20 670,130 740,30 820,140 890,20 970,130 1040,30 1120,140 1190,40 1270,130 1350,50 1440,90 1440,200 0,200"
+        {/* Mountain range — leaning right for depth, one continuous organic ridge */}
+        <div
+          className="absolute"
+          style={{ bottom: '30%', left: 0, width: '100%', height: '50%', transform: 'skewX(-4deg) scale(1.05)', transformOrigin: 'bottom left' }}
+        >
+          <svg viewBox="0 0 1440 360" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+            <defs>
+              <linearGradient id="nearMountainFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#1c0e38" />
+                <stop offset="100%" stopColor="#0a0518" />
+              </linearGradient>
+            </defs>
+            <path d={`${RIDGE_PATH} L1440,360 L0,360 Z`} fill="url(#nearMountainFill)" />
+            <path
+              d={RIDGE_PATH}
               fill="none"
               stroke="#ff2fd6"
               strokeWidth="3"
+              filter="url(#mountainStatic)"
+              style={{ filter: 'url(#mountainStatic) drop-shadow(0 0 8px #ff2fd6) drop-shadow(0 0 18px #ff2fd6)' }}
             />
           </svg>
-          <div
-            className="absolute bottom-0 left-1/2 -translate-x-1/2"
-            style={{
-              width: '160%',
-              height: '100%',
-              transform: 'rotateX(55deg)',
-              transformOrigin: 'bottom center',
-              backgroundImage: `
-                repeating-linear-gradient(90deg, rgba(56,189,248,0.35) 0px, rgba(56,189,248,0.35) 1px, transparent 1px, transparent 60px),
-                repeating-linear-gradient(0deg, rgba(56,189,248,0.25) 0px, rgba(56,189,248,0.25) 1px, transparent 1px, transparent 40px)
-              `,
-            }}
-          />
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            animate={{ opacity: [0.15, 0.3, 0.15] }}
-            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(56,189,248,0.2) 100%)' }}
-          />
         </div>
 
-        {/* Neon dotted waterfall — pours out of the lake into the next section */}
+        {/* The lake — a real mirrored reflection of the ridge, same lean, tinted and rippled */}
+        <div
+          className="absolute bottom-0 left-0 w-full overflow-hidden"
+          style={{ height: '30%' }}
+        >
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(180deg, rgba(20,10,40,0.9) 0%, rgba(10,5,25,0.95) 100%)',
+          }} />
+          <svg
+            viewBox="0 0 1440 360"
+            preserveAspectRatio="none"
+            className="absolute w-full"
+            style={{
+              top: 0,
+              height: '160%',
+              transform: 'skewX(-4deg) scale(1.05, -1)',
+              transformOrigin: 'top left',
+              opacity: 0.4,
+            }}
+          >
+            <path d={RIDGE_PATH} fill="none" stroke="#ff2fd6" strokeWidth="3" style={{ filter: 'blur(1.5px)' }} />
+          </svg>
+          {/* Ripple shimmer */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            animate={{ opacity: [0.15, 0.35, 0.15] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            style={{
+              background: 'repeating-linear-gradient(180deg, rgba(56,189,248,0.12) 0px, transparent 3px, transparent 9px)',
+            }}
+          />
+          {/* Where the lake spills off the edge into a waterfall */}
+          <div className="absolute right-[10%] top-0 bottom-0 w-24" style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.25) 100%)',
+          }} />
+        </div>
+
+        {/* Neon dotted waterfall — pours off the lake's edge into the next section */}
         <NeonWaterfall dropProgress={dropProgress} />
       </motion.div>
     </section>
