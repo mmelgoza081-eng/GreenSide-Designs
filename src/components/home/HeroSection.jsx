@@ -21,7 +21,7 @@ export default function HeroSection() {
       <RadioactiveOrbs count={16} />
 
       {/* Real shooting stars + fixed starfield */}
-      <ShootingStars starCount={110} shooters={6} />
+      <ShootingStars starCount={110} shooters={7} fireballs={2} />
 
       {/* Fine grid, quiet */}
       <div
@@ -94,6 +94,15 @@ export default function HeroSection() {
             View Pricing
           </Link>
         </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          className="font-mono text-[11px] uppercase tracking-[0.15em] text-emerald-300/70 mt-6"
+        >
+          You don't pay a cent until your site is done
+        </motion.p>
       </motion.div>
 
       {/* Scroll indicator */}

@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Check, ArrowRight, Zap, Star } from 'lucide-react';
+import AmbientBackground from '@/components/ui/AmbientBackground';
 
 // Create a Payment Link for each package in your Stripe Dashboard
 // (Dashboard → Payment links → +New) and paste the URLs below.
@@ -176,7 +177,8 @@ export default function Services() {
   const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
 
   return (
-    <div className="pt-20">
+    <div className="pt-20 relative">
+      <AmbientBackground />
       {/* Header */}
       <section className="py-24 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-border">
         <div ref={headerRef}>
@@ -199,10 +201,18 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="font-body text-lg text-mercury/40 max-w-xl leading-relaxed"
+            className="font-body text-lg text-mercury/40 max-w-xl leading-relaxed mb-4"
           >
             Simple, transparent pricing. No hidden fees, no surprises.
             Choose what fits your business, and let's build something remarkable.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="font-mono text-xs uppercase tracking-[0.15em] text-velvet"
+          >
+            You don't pay until your site is done
           </motion.p>
         </div>
       </section>

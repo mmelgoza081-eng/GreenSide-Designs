@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock, Heart } from 'lucide-react';
+import AmbientBackground from '@/components/ui/AmbientBackground';
 
 const ABOUT_IMAGE = 'https://media.base44.com/images/public/6a239ffb5d3f7d9bfe82abfe/4221c8c43_generated_image.png';
 
@@ -52,7 +53,8 @@ export default function About() {
   const storyInView = useInView(storyRef, { once: true, margin: "-80px" });
 
   return (
-    <div className="pt-20">
+    <div className="pt-20 relative">
+      <AmbientBackground />
       {/* Header */}
       <section className="py-24 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-border">
         <div ref={headerRef}>

@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Send, CheckCircle, MapPin, Mail, Clock } from 'lucide-react';
+import AmbientBackground from '@/components/ui/AmbientBackground';
 
 // 1. Create a free form at https://formspree.io (takes ~2 minutes)
 // 2. Point it at the email(s) you want inquiries sent to
@@ -78,7 +79,8 @@ export default function Contact() {
   }
 
   return (
-    <div className="pt-20">
+    <div className="pt-20 relative">
+      <AmbientBackground />
       {/* Header */}
       <section className="py-24 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-border">
         <div ref={headerRef}>
@@ -232,8 +234,7 @@ export default function Contact() {
 
               <div className="border-t border-border pt-8">
                 <p className="font-body text-sm text-mercury/30 leading-relaxed">
-                  Prefer to book directly? Check out our 
-                  <a href="/services" className="text-velvet hover:underline ml-1">services page</a> for pricing details.
+                  Prefer to book directly? Head to the Services page in the menu above for pricing details.
                 </p>
               </div>
             </div>
