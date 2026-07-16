@@ -16,12 +16,6 @@ export default function HeroSection() {
   const clipPath = useMotionTemplate`circle(${circleRadius}% at 50% ${circleY}%)`;
   const contentY = useTransform(scrollY, [0, 480], [0, -80]);
 
-  // A thin electric-blue line that rises up through the closing circle,
-  // foreshadowing the river section right below.
-  const lineOpacity = useTransform(scrollY, [80, 260, 480], [0, 1, 1]);
-  const lineHeight = useTransform(scrollY, [80, 480], ['0%', '65%']);
-  const lineY = useTransform(scrollY, [0, 480], [0, -140]);
-
   return (
     <section className="relative h-screen overflow-hidden" style={{ background: '#050807' }}>
       {/* Deep space gradient base */}
@@ -45,18 +39,6 @@ export default function HeroSection() {
       <div className="absolute inset-0 pointer-events-none" style={{
         background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
       }} />
-
-      {/* The rising electric-blue line, climbing up as the hero closes */}
-      <motion.div
-        className="absolute left-1/2 bottom-0 w-[3px] -translate-x-1/2 pointer-events-none"
-        style={{
-          height: lineHeight,
-          opacity: lineOpacity,
-          y: lineY,
-          background: 'linear-gradient(180deg, #e0f2fe 0%, #38bdf8 55%, transparent 100%)',
-          boxShadow: '0 0 14px 2px rgba(56,189,248,0.6)',
-        }}
-      />
 
       {/* Hero content — vanishes upward through a shrinking circle on scroll */}
       <motion.div
