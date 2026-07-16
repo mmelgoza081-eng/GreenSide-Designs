@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const PALETTES = [
@@ -27,6 +27,13 @@ function Orb({ size, top, left, drift, duration, palette, delay }) {
 }
 
 export default function Section1Orbs() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+
+  // De-expand as you scroll out of this section
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.7]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 1, 0]);
+
   const orbs = useMemo(() => (
     [
       { size: 420, top: '20%', left: '15%' },
@@ -45,17 +52,34 @@ export default function Section1Orbs() {
   ), []);
 
   return (
-    <section className="relative h-screen overflow-hidden flex items-center justify-center" style={{ background: '#6b7280' }}>
+    <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center" style={{ background: '#6b7280' }}>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {orbs.map(o => <Orb key={o.id} {...o} />)}
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center px-6">
+      <motion.div style={{ scale: contentScale, opacity: contentOpacity }} className="relative z-10 flex flex-col items-center text-center px-6">
         <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/80 mb-6">Lacey, WA</p>
-        <h1 className="font-display font-bold text-white leading-none text-[13vw] md:text-[8vw] lg:text-[6vw]">
-          GreenSide Designs
-        </h1>
-        <div className="flex flex-col sm:flex-row gap-4 mt-10">
+        <div className="flex flex-col items-center leading-none mb-4 px-4 pt-3">
+          <span className="font-display font-bold tracking-tighter text-white text-[min(15vw,17vh)] md:text-[min(12vw,16vh)] lg:text-[min(9vw,15vh)] leading-[1.05] pb-2">
+            Green
+          </span>
+          <span className="font-display font-bold tracking-tighter text-white text-[min(15vw,17vh)] md:text-[min(12vw,16vh)] lg:text-[min(9vw,15vh)] leading-[1.05] pb-2">
+            Side
+          </span>
+          <span
+            className="font-display font-bold tracking-tight italic text-[min(15vw,17vh)] md:text-[min(12vw,16vh)] lg:text-[min(9vw,15vh)] leading-[1.05] inline-block pb-2"
+            style={{
+              background: 'linear-gradient(90deg, #34d399 0%, #a7f3d0 50%, #34d399 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: 'drop-shadow(0 0 24px rgba(52,211,153,0.45))',
+              paddingRight: '0.12em',
+            }}
+          >
+            Designs
+          </span>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 mt-6">
           <Link
             to="/contact"
             className="font-mono text-xs uppercase tracking-[0.2em] bg-white text-[#6b7280] px-8 py-4 hover:bg-white/90 transition-all duration-300 rounded-sm"
@@ -69,7 +93,7 @@ export default function Section1Orbs() {
             View Pricing
           </Link>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

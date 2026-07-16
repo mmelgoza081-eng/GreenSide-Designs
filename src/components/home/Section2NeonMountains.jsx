@@ -1,9 +1,53 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+
+// A beaded/dotted neon waterfall — a column of small glowing dots that
+// "fall," matching the dotted-line style used elsewhere on the site.
+function NeonWaterfall({ dropProgress }) {
+  const dots = useMemo(() => (
+    Array.from({ length: 22 }).map((_, i) => ({
+      id: i,
+      xOffset: (Math.random() - 0.5) * 14,
+      size: 5 + Math.random() * 4,
+      delay: i * 0.06,
+    }))
+  ), []);
+
+  return (
+    <motion.div
+      className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-none"
+      style={{ height: useTransform(dropProgress, [0, 1], ['0%', '160%']), width: 40, overflow: 'visible' }}
+    >
+      {dots.map((d, i) => (
+        <motion.div
+          key={d.id}
+          className="absolute rounded-full"
+          style={{
+            left: `calc(50% + ${d.xOffset}px)`,
+            width: d.size,
+            height: d.size,
+            background: '#38bdf8',
+            boxShadow: '0 0 8px 2px rgba(56,189,248,0.8)',
+          }}
+          animate={{ top: ['-5%', '105%'], opacity: [0, 1, 1, 0] }}
+          transition={{ repeat: Infinity, duration: 1.8, delay: d.delay, ease: 'linear' }}
+        />
+      ))}
+    </motion.div>
+  );
+}
 
 export default function Section2NeonMountains() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+
+  // Expand in as you scroll into the section, de-expand as you leave
+  const contentScale = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0.75, 1, 1, 0.8]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const dropProgress = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
+
   return (
-    <section className="relative h-screen overflow-hidden" style={{ background: '#050310' }}>
+    <section ref={ref} className="relative h-screen overflow-hidden" style={{ background: '#050310' }}>
       {/* Spacey backdrop */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(ellipse at 50% 15%, #14082e 0%, #08041a 55%, #030110 100%)',
@@ -25,67 +69,96 @@ export default function Section2NeonMountains() {
         </defs>
       </svg>
 
-      {/* Realistic layered mountain range — back range fainter, front range sharper */}
-      <svg viewBox="0 0 1440 500" preserveAspectRatio="none" className="absolute" style={{ bottom: '32%', left: 0, width: '100%', height: '55%' }}>
-        {/* Back range */}
-        <polyline
-          points="0,420 90,300 170,360 250,240 330,330 410,200 500,310 590,230 680,340 770,210 860,320 950,250 1040,350 1130,220 1220,330 1310,260 1440,300 1440,500 0,500"
-          fill="none"
-          stroke="#7a2fff"
-          strokeWidth="2"
-          opacity="0.55"
-          filter="url(#mountainStatic)"
-          style={{ filter: 'url(#mountainStatic) drop-shadow(0 0 6px #7a2fff)' }}
-        />
-        {/* Front range */}
-        <polyline
-          points="0,500 60,340 140,420 230,260 320,400 410,230 500,390 600,270 690,410 780,240 870,400 960,280 1050,420 1140,250 1230,400 1320,290 1440,350 1440,500 0,500"
-          fill="none"
-          stroke="#ff2fd6"
-          strokeWidth="3"
-          filter="url(#mountainStatic)"
-          style={{ filter: 'url(#mountainStatic) drop-shadow(0 0 8px #ff2fd6) drop-shadow(0 0 18px #ff2fd6)' }}
-        />
-      </svg>
+      <motion.div style={{ scale: contentScale, opacity: contentOpacity }} className="absolute inset-0">
+        {/* Lettering */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-fuchsia-300/80 mb-4">From idea to launch</p>
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-white leading-tight max-w-lg">
+            No detours. Just a straight line to launch.
+          </h2>
+        </div>
 
-      {/* 3D perspective lake — the transition piece into the next section */}
-      <div className="absolute bottom-0 left-0 w-full" style={{ height: '32%', perspective: '400px', overflow: 'hidden' }}>
-        {/* Reflection of the mountains, flipped and faded */}
-        <div className="absolute inset-0" style={{
-          background: 'linear-gradient(180deg, rgba(122,47,255,0.18) 0%, rgba(255,47,214,0.12) 40%, transparent 90%)',
-        }} />
-        <svg viewBox="0 0 1440 200" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full" style={{ transform: 'scaleY(-1)', opacity: 0.35 }}>
-          <polyline
-            points="0,200 60,80 140,160 230,20 320,140 410,10 500,130 600,30 690,150 780,10 870,140 960,40 1050,150 1140,10 1230,140 1320,50 1440,90 1440,200 0,200"
+        {/* Realistic layered mountain silhouettes with a neon-glowing ridge line */}
+        <svg viewBox="0 0 1440 500" preserveAspectRatio="none" className="absolute" style={{ bottom: '32%', left: 0, width: '100%', height: '55%' }}>
+          <defs>
+            <linearGradient id="farMountainFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#2a1a52" />
+              <stop offset="100%" stopColor="#160c30" />
+            </linearGradient>
+            <linearGradient id="nearMountainFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#180a2e" />
+              <stop offset="100%" stopColor="#0a0518" />
+            </linearGradient>
+          </defs>
+
+          {/* Far range — hazier, lower contrast, atmospheric perspective */}
+          <path
+            d="M0,500 L0,300 L60,235 L95,270 L150,175 L210,255 L270,140 L330,240 L400,150 L460,235 L530,120 L600,225 L670,160 L740,235 L810,130 L880,220 L950,175 L1020,240 L1090,150 L1160,230 L1230,170 L1300,235 L1370,190 L1440,220 L1440,500 Z"
+            fill="url(#farMountainFill)"
+            opacity="0.7"
+          />
+          <path
+            d="M0,300 L60,235 L95,270 L150,175 L210,255 L270,140 L330,240 L400,150 L460,235 L530,120 L600,225 L670,160 L740,235 L810,130 L880,220 L950,175 L1020,240 L1090,150 L1160,230 L1230,170 L1300,235 L1370,190 L1440,220"
+            fill="none"
+            stroke="#7a2fff"
+            strokeWidth="1.5"
+            opacity="0.45"
+            filter="url(#mountainStatic)"
+            style={{ filter: 'url(#mountainStatic) drop-shadow(0 0 5px #7a2fff)' }}
+          />
+
+          {/* Near range — sharper, darker body, brighter glowing ridge */}
+          <path
+            d="M0,500 L0,360 L45,300 L85,345 L130,255 L180,335 L240,225 L300,330 L365,235 L430,345 L500,220 L565,335 L630,245 L700,350 L770,235 L840,340 L905,255 L975,345 L1045,230 L1115,335 L1185,255 L1255,340 L1330,265 L1400,330 L1440,300 L1440,500 Z"
+            fill="url(#nearMountainFill)"
+          />
+          <path
+            d="M0,360 L45,300 L85,345 L130,255 L180,335 L240,225 L300,330 L365,235 L430,345 L500,220 L565,335 L630,245 L700,350 L770,235 L840,340 L905,255 L975,345 L1045,230 L1115,335 L1185,255 L1255,340 L1330,265 L1400,330 L1440,300"
             fill="none"
             stroke="#ff2fd6"
-            strokeWidth="3"
+            strokeWidth="2.5"
+            filter="url(#mountainStatic)"
+            style={{ filter: 'url(#mountainStatic) drop-shadow(0 0 8px #ff2fd6) drop-shadow(0 0 18px #ff2fd6)' }}
           />
         </svg>
 
-        {/* Converging perspective lines to sell depth going "out" toward the viewer */}
-        <div
-          className="absolute bottom-0 left-1/2 -translate-x-1/2"
-          style={{
-            width: '160%',
-            height: '100%',
-            transform: 'rotateX(55deg)',
-            transformOrigin: 'bottom center',
-            backgroundImage: `
-              repeating-linear-gradient(90deg, rgba(56,189,248,0.35) 0px, rgba(56,189,248,0.35) 1px, transparent 1px, transparent 60px),
-              repeating-linear-gradient(0deg, rgba(56,189,248,0.25) 0px, rgba(56,189,248,0.25) 1px, transparent 1px, transparent 40px)
-            `,
-          }}
-        />
+        {/* 3D perspective lake */}
+        <div className="absolute bottom-0 left-0 w-full" style={{ height: '32%', overflow: 'hidden' }}>
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(180deg, rgba(122,47,255,0.18) 0%, rgba(255,47,214,0.12) 40%, transparent 90%)',
+          }} />
+          <svg viewBox="0 0 1440 200" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full" style={{ transform: 'scaleY(-1)', opacity: 0.35 }}>
+            <polyline
+              points="0,200 50,90 110,150 170,40 230,140 300,20 370,130 440,30 520,140 590,20 670,130 740,30 820,140 890,20 970,130 1040,30 1120,140 1190,40 1270,130 1350,50 1440,90 1440,200 0,200"
+              fill="none"
+              stroke="#ff2fd6"
+              strokeWidth="3"
+            />
+          </svg>
+          <div
+            className="absolute bottom-0 left-1/2 -translate-x-1/2"
+            style={{
+              width: '160%',
+              height: '100%',
+              transform: 'rotateX(55deg)',
+              transformOrigin: 'bottom center',
+              backgroundImage: `
+                repeating-linear-gradient(90deg, rgba(56,189,248,0.35) 0px, rgba(56,189,248,0.35) 1px, transparent 1px, transparent 60px),
+                repeating-linear-gradient(0deg, rgba(56,189,248,0.25) 0px, rgba(56,189,248,0.25) 1px, transparent 1px, transparent 40px)
+              `,
+            }}
+          />
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            animate={{ opacity: [0.15, 0.3, 0.15] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(56,189,248,0.2) 100%)' }}
+          />
+        </div>
 
-        {/* Water shimmer */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          animate={{ opacity: [0.15, 0.3, 0.15] }}
-          transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-          style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(56,189,248,0.2) 100%)' }}
-        />
-      </div>
+        {/* Neon dotted waterfall — pours out of the lake into the next section */}
+        <NeonWaterfall dropProgress={dropProgress} />
+      </motion.div>
     </section>
   );
 }
