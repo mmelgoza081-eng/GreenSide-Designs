@@ -14,10 +14,10 @@ export default function HeroSection() {
   const clipPath = useMotionTemplate`circle(${circleRadius}% at 50% 10%)`;
   const contentY = useTransform(scrollY, [0, 480], [0, -40]);
 
-  // The electric-blue line is revealed at that exact same closing point,
-  // growing downward as the circle shrinks — the line IS what's left once
-  // the circle closes, not a separate effect.
-  const lineHeight = useTransform(scrollY, [120, 480], ['0%', '100%']);
+  // The electric-blue line rises UP from the bottom of the hero into the
+  // exact point the circle closes to — reinforcing that the close pulls
+  // the line upward with it, not the other way around.
+  const lineHeight = useTransform(scrollY, [120, 480], ['0%', '90%']);
   const lineOpacity = useTransform(scrollY, [120, 220], [0, 1]);
 
   return (
@@ -44,13 +44,13 @@ export default function HeroSection() {
         background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
       }} />
 
-      {/* The electric line, revealed at the exact point the circle closes to */}
+      {/* The electric line, rising up from the bottom into the closing point */}
       <motion.div
-        className="absolute left-1/2 top-[10%] w-[3px] -translate-x-1/2 pointer-events-none"
+        className="absolute left-1/2 bottom-0 w-[3px] -translate-x-1/2 pointer-events-none"
         style={{
           height: lineHeight,
           opacity: lineOpacity,
-          background: 'linear-gradient(180deg, #e0f2fe 0%, #38bdf8 45%, #0ea5e9 100%)',
+          background: 'linear-gradient(0deg, #0ea5e9 0%, #38bdf8 55%, #e0f2fe 100%)',
           boxShadow: '0 0 14px 2px rgba(56,189,248,0.6)',
         }}
       />
