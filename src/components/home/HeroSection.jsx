@@ -61,14 +61,14 @@ export default function HeroSection() {
           transition={{ delay: 0.15, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-center leading-none mb-10 px-4 pt-3"
         >
-          <span className="font-display font-bold tracking-tighter text-white text-[15vw] md:text-[12vw] lg:text-[10vw] leading-[1.05] pb-2">
+          <span className="font-display font-bold tracking-tighter text-white text-[min(15vw,17vh)] md:text-[min(12vw,16vh)] lg:text-[min(10vw,15vh)] leading-[1.05] pb-2">
             Green
           </span>
-          <span className="font-display font-bold tracking-tighter text-white text-[15vw] md:text-[12vw] lg:text-[10vw] leading-[1.05] pb-2">
+          <span className="font-display font-bold tracking-tighter text-white text-[min(15vw,17vh)] md:text-[min(12vw,16vh)] lg:text-[min(10vw,15vh)] leading-[1.05] pb-2">
             Side
           </span>
           <span
-            className="font-display font-bold tracking-tight italic text-[15vw] md:text-[12vw] lg:text-[10vw] leading-[1.05] inline-block pb-2"
+            className="font-display font-bold tracking-tight italic text-[min(15vw,17vh)] md:text-[min(12vw,16vh)] lg:text-[min(10vw,15vh)] leading-[1.05] inline-block pb-2"
             style={{
               background: 'linear-gradient(90deg, #34d399 0%, #a7f3d0 50%, #34d399 100%)',
               WebkitBackgroundClip: 'text',

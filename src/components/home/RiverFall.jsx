@@ -75,10 +75,10 @@ export default function RiverFall() {
         <svg width="0" height="0" style={{ position: 'absolute' }}>
           <defs>
             <filter id="electricJitter" x="-50%" y="-50%" width="200%" height="200%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.015 0.06" numOctaves="2" seed="7" result="noise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="2" seed="7" result="noise">
                 <animate attributeName="seed" values="1;40;12;55;1" dur="1.2s" repeatCount="indefinite" />
               </feTurbulence>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
             </filter>
           </defs>
         </svg>
