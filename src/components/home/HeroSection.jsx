@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowDown } from 'lucide-react';
 import ShootingStars from '@/components/ui/ShootingStars';
-import FloatingOrb from '@/components/ui/FloatingOrb';
+import RadioactiveOrbs from '@/components/ui/RadioactiveOrbs';
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
@@ -17,12 +17,11 @@ export default function HeroSection() {
         background: 'radial-gradient(ellipse at 60% 20%, #0d1f16 0%, #060b09 45%, #030504 100%)',
       }} />
 
-      {/* Distant floating sun */}
-      <FloatingOrb size={520} top="18%" left="72%" />
-      <FloatingOrb size={280} top="80%" left="12%" colorFrom="rgba(16,185,129,0.35)" colorVia="rgba(5,150,105,0.12)" drift={18} />
+      {/* A whole field of glowing orbs drifting at different depths */}
+      <RadioactiveOrbs count={16} />
 
       {/* Real shooting stars + fixed starfield */}
-      <ShootingStars starCount={110} shooters={5} />
+      <ShootingStars starCount={110} shooters={6} />
 
       {/* Fine grid, quiet */}
       <div

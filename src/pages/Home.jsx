@@ -5,6 +5,7 @@ import ServicesPreview from '../components/home/ServicesPreview';
 import ModernProcess from '../components/home/ModernProcess';
 import ModernCTA from '../components/home/ModernCTA';
 import SectionReveal from '../components/home/SectionReveal';
+import RiverFall from '../components/home/RiverFall';
 
 const SERVICE_IMAGES = [
   'https://media.base44.com/images/public/6a239ffb5d3f7d9bfe82abfe/5722a9686_generated_image.png',
@@ -16,6 +17,7 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <RiverFall />
       <SectionReveal><ValueProposition /></SectionReveal>
       <SectionReveal><ServicesPreview images={SERVICE_IMAGES} /></SectionReveal>
       <SectionReveal><ModernProcess /></SectionReveal>
