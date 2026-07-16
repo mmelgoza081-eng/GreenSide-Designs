@@ -1,21 +1,14 @@
 import React from 'react';
-import HeroSection from '../components/home/HeroSection';
-import ValueProposition from '../components/home/ValueProposition';
-import ServicesPreview from '../components/home/ServicesPreview';
-import ModernProcess from '../components/home/ModernProcess';
-import ModernCTA from '../components/home/ModernCTA';
-import SectionReveal from '../components/home/SectionReveal';
-import RiverFall from '../components/home/RiverFall';
+import Section1Orbs from '../components/home/Section1Orbs';
+import Section2NeonMountains from '../components/home/Section2NeonMountains';
+import Section3GlowingDots from '../components/home/Section3GlowingDots';
 
 export default function Home() {
   return (
     <>
-      <HeroSection />
-      <RiverFall />
-      <SectionReveal><ValueProposition /></SectionReveal>
-      <SectionReveal><ServicesPreview /></SectionReveal>
-      <SectionReveal><ModernProcess /></SectionReveal>
-      <SectionReveal><ModernCTA /></SectionReveal>
+      <Section1Orbs />
+      <Section2NeonMountains />
+      <Section3GlowingDots />
     </>
   );
 }
