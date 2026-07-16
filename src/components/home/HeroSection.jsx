@@ -14,11 +14,10 @@ export default function HeroSection() {
   const clipPath = useMotionTemplate`circle(${circleRadius}% at 50% 10%)`;
   const contentY = useTransform(scrollY, [0, 480], [0, -40]);
 
-  // The electric-blue line rises UP from the bottom of the hero into the
-  // exact point the circle closes to — reinforcing that the close pulls
-  // the line upward with it, not the other way around.
-  const lineHeight = useTransform(scrollY, [120, 480], ['0%', '90%']);
-  const lineOpacity = useTransform(scrollY, [120, 220], [0, 1]);
+  // A short segment of the river's own beaded electric line — same style,
+  // not a plain bar — that fades in near the top only as the circle closes.
+  const lineOpacity = useTransform(scrollY, [260, 460], [0, 1]);
+  const lineDrift = useTransform(scrollY, [260, 480], [30, 0]);
 
   return (
     <section className="relative h-screen overflow-hidden" style={{ background: '#050807' }}>
@@ -44,16 +43,31 @@ export default function HeroSection() {
         background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
       }} />
 
-      {/* The electric line, rising up from the bottom into the closing point */}
-      <motion.div
-        className="absolute left-1/2 bottom-0 w-[3px] -translate-x-1/2 pointer-events-none"
-        style={{
-          height: lineHeight,
-          opacity: lineOpacity,
-          background: 'linear-gradient(0deg, #0ea5e9 0%, #38bdf8 55%, #e0f2fe 100%)',
-          boxShadow: '0 0 14px 2px rgba(56,189,248,0.6)',
-        }}
-      />
+      {/* Short beaded segment, same style as the river below — appears near
+          the top only, right where the circle closes to */}
+      <motion.svg
+        viewBox="0 0 40 220"
+        className="absolute left-1/2 top-0 -translate-x-1/2 w-10 h-56 pointer-events-none"
+        style={{ opacity: lineOpacity, y: lineDrift }}
+      >
+        <defs>
+          <linearGradient id="heroLineGrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.4" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#e0f2fe" stopOpacity="1" />
+          </linearGradient>
+        </defs>
+        <motion.line
+          x1="20" y1="220" x2="20" y2="0"
+          stroke="url(#heroLineGrad)"
+          strokeWidth="7"
+          strokeLinecap="round"
+          strokeDasharray="18 11"
+          style={{ filter: 'drop-shadow(0 0 6px rgba(56,189,248,0.7))' }}
+          animate={{ strokeDashoffset: [0, -290] }}
+          transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
+        />
+      </motion.svg>
 
       {/* Hero content — closes like an iris to a fixed point at the top */}
       <motion.div
