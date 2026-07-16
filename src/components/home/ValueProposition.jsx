@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import ScrollingTicker from '../ui/ScrollingTicker';
 import BrowserMockup from '../ui/BrowserMockup';
+import MountainRange from '../ui/MountainRange';
 
 export default function ValueProposition() {
   const ref = useRef(null);
@@ -20,6 +21,7 @@ export default function ValueProposition() {
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden bg-white">
+      <MountainRange />
       {/* Main statement — centred */}
       <div ref={ref} className="relative z-10 px-6 md:px-12 max-w-[900px] mx-auto pt-24 md:pt-36 pb-16 text-center">
         <motion.p

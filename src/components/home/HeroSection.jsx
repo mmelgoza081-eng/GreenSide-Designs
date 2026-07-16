@@ -7,8 +7,15 @@ import RadioactiveOrbs from '@/components/ui/RadioactiveOrbs';
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
-  const contentY = useTransform(scrollY, [0, 500], [0, 60]);
+
+  // The whole hero content gets pulled upward and swallowed by a shrinking
+  // circle as you scroll — not a flat fade, an actual upward disappearance.
+  const clipPath = useTransform(
+    scrollY,
+    [0, 480],
+    ['circle(150% at 50% 55%)', 'circle(0% at 50% -25%)']
+  );
+  const contentY = useTransform(scrollY, [0, 480], [0, -80]);
 
   return (
     <section className="relative h-screen overflow-hidden" style={{ background: '#050807' }}>
@@ -34,9 +41,9 @@ export default function HeroSection() {
         background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
       }} />
 
-      {/* Hero content */}
+      {/* Hero content — vanishes upward through a shrinking circle on scroll */}
       <motion.div
-        style={{ opacity, y: contentY }}
+        style={{ clipPath, y: contentY }}
         className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
       >
         <motion.p
@@ -53,16 +60,16 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center leading-none mb-10 px-4"
+          className="flex flex-col items-center leading-none mb-10 px-4 pt-3"
         >
-          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
+          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[1] pb-1">
             Green
           </span>
-          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
+          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[1] pb-1">
             Side
           </span>
           <span
-            className="font-display font-bold tracking-tight italic text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9] inline-block"
+            className="font-display font-bold tracking-tight italic text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[1] inline-block"
             style={{
               background: 'linear-gradient(90deg, #34d399 0%, #a7f3d0 50%, #34d399 100%)',
               WebkitBackgroundClip: 'text',
