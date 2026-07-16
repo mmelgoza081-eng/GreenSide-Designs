@@ -8,13 +8,17 @@ import RadioactiveOrbs from '@/components/ui/RadioactiveOrbs';
 export default function HeroSection() {
   const { scrollY } = useScroll();
 
-  // The whole hero content gets pulled upward and swallowed by a shrinking
-  // circle as you scroll — built from real numeric motion values (not a
-  // two-string guess) so the radius and position actually interpolate.
+  // The hero closes like a camera iris shrinking to a fixed point near the
+  // top of the screen — not a spotlight flying away, a closure in place.
   const circleRadius = useTransform(scrollY, [0, 480], [150, 0]);
-  const circleY = useTransform(scrollY, [0, 480], [55, -20]);
-  const clipPath = useMotionTemplate`circle(${circleRadius}% at 50% ${circleY}%)`;
-  const contentY = useTransform(scrollY, [0, 480], [0, -80]);
+  const clipPath = useMotionTemplate`circle(${circleRadius}% at 50% 10%)`;
+  const contentY = useTransform(scrollY, [0, 480], [0, -40]);
+
+  // The electric-blue line is revealed at that exact same closing point,
+  // growing downward as the circle shrinks — the line IS what's left once
+  // the circle closes, not a separate effect.
+  const lineHeight = useTransform(scrollY, [120, 480], ['0%', '100%']);
+  const lineOpacity = useTransform(scrollY, [120, 220], [0, 1]);
 
   return (
     <section className="relative h-screen overflow-hidden" style={{ background: '#050807' }}>
@@ -40,7 +44,18 @@ export default function HeroSection() {
         background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
       }} />
 
-      {/* Hero content — vanishes upward through a shrinking circle on scroll */}
+      {/* The electric line, revealed at the exact point the circle closes to */}
+      <motion.div
+        className="absolute left-1/2 top-[10%] w-[3px] -translate-x-1/2 pointer-events-none"
+        style={{
+          height: lineHeight,
+          opacity: lineOpacity,
+          background: 'linear-gradient(180deg, #e0f2fe 0%, #38bdf8 45%, #0ea5e9 100%)',
+          boxShadow: '0 0 14px 2px rgba(56,189,248,0.6)',
+        }}
+      />
+
+      {/* Hero content — closes like an iris to a fixed point at the top */}
       <motion.div
         style={{ clipPath, y: contentY }}
         className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
