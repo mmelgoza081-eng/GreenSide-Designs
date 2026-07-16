@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroSection from '../components/home/HeroSection';
+import ScrollLineTransition from '../components/home/ScrollLineTransition';
 import ValueProposition from '../components/home/ValueProposition';
 import ServicesPreview from '../components/home/ServicesPreview';
 import ModernProcess from '../components/home/ModernProcess';
@@ -10,7 +10,7 @@ import RiverFall from '../components/home/RiverFall';
 export default function Home() {
   return (
     <>
-      <HeroSection />
+      <ScrollLineTransition />
       <RiverFall />
       <SectionReveal><ValueProposition /></SectionReveal>
       <SectionReveal><ServicesPreview /></SectionReveal>
