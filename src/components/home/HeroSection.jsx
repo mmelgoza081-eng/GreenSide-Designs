@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowDown } from 'lucide-react';
 import ShootingStars from '@/components/ui/ShootingStars';
@@ -9,13 +9,18 @@ export default function HeroSection() {
   const { scrollY } = useScroll();
 
   // The whole hero content gets pulled upward and swallowed by a shrinking
-  // circle as you scroll — not a flat fade, an actual upward disappearance.
-  const clipPath = useTransform(
-    scrollY,
-    [0, 480],
-    ['circle(150% at 50% 55%)', 'circle(0% at 50% -25%)']
-  );
+  // circle as you scroll — built from real numeric motion values (not a
+  // two-string guess) so the radius and position actually interpolate.
+  const circleRadius = useTransform(scrollY, [0, 480], [150, 0]);
+  const circleY = useTransform(scrollY, [0, 480], [55, -20]);
+  const clipPath = useMotionTemplate`circle(${circleRadius}% at 50% ${circleY}%)`;
   const contentY = useTransform(scrollY, [0, 480], [0, -80]);
+
+  // A thin electric-blue line that rises up through the closing circle,
+  // foreshadowing the river section right below.
+  const lineOpacity = useTransform(scrollY, [80, 260, 480], [0, 1, 1]);
+  const lineHeight = useTransform(scrollY, [80, 480], ['0%', '65%']);
+  const lineY = useTransform(scrollY, [0, 480], [0, -140]);
 
   return (
     <section className="relative h-screen overflow-hidden" style={{ background: '#050807' }}>
@@ -41,6 +46,18 @@ export default function HeroSection() {
         background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)',
       }} />
 
+      {/* The rising electric-blue line, climbing up as the hero closes */}
+      <motion.div
+        className="absolute left-1/2 bottom-0 w-[3px] -translate-x-1/2 pointer-events-none"
+        style={{
+          height: lineHeight,
+          opacity: lineOpacity,
+          y: lineY,
+          background: 'linear-gradient(180deg, #e0f2fe 0%, #38bdf8 55%, transparent 100%)',
+          boxShadow: '0 0 14px 2px rgba(56,189,248,0.6)',
+        }}
+      />
+
       {/* Hero content — vanishes upward through a shrinking circle on scroll */}
       <motion.div
         style={{ clipPath, y: contentY }}
@@ -62,14 +79,14 @@ export default function HeroSection() {
           transition={{ delay: 0.15, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-center leading-none mb-10 px-4 pt-3"
         >
-          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[1] pb-1">
+          <span className="font-display font-bold tracking-tighter text-white text-[15vw] md:text-[12vw] lg:text-[10vw] leading-[1.05] pb-2">
             Green
           </span>
-          <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[1] pb-1">
+          <span className="font-display font-bold tracking-tighter text-white text-[15vw] md:text-[12vw] lg:text-[10vw] leading-[1.05] pb-2">
             Side
           </span>
           <span
-            className="font-display font-bold tracking-tight italic text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[1] inline-block"
+            className="font-display font-bold tracking-tight italic text-[15vw] md:text-[12vw] lg:text-[10vw] leading-[1.05] inline-block pb-2"
             style={{
               background: 'linear-gradient(90deg, #34d399 0%, #a7f3d0 50%, #34d399 100%)',
               WebkitBackgroundClip: 'text',
