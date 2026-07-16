@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const PALETTES = [
   { from: 'rgba(163,230,53,0.55)', via: 'rgba(101,163,13,0.2)' },
@@ -44,9 +45,30 @@ export default function Section1Orbs() {
   ), []);
 
   return (
-    <section className="relative h-screen overflow-hidden" style={{ background: '#6b7280' }}>
+    <section className="relative h-screen overflow-hidden flex items-center justify-center" style={{ background: '#6b7280' }}>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {orbs.map(o => <Orb key={o.id} {...o} />)}
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center text-center px-6">
+        <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/80 mb-6">Lacey, WA</p>
+        <h1 className="font-display font-bold text-white leading-none text-[13vw] md:text-[8vw] lg:text-[6vw]">
+          GreenSide Designs
+        </h1>
+        <div className="flex flex-col sm:flex-row gap-4 mt-10">
+          <Link
+            to="/contact"
+            className="font-mono text-xs uppercase tracking-[0.2em] bg-white text-[#6b7280] px-8 py-4 hover:bg-white/90 transition-all duration-300 rounded-sm"
+          >
+            Start Your Project
+          </Link>
+          <Link
+            to="/services"
+            className="font-mono text-xs uppercase tracking-[0.2em] border border-white/50 px-8 py-4 text-white hover:bg-white/10 transition-all duration-300 rounded-sm"
+          >
+            View Pricing
+          </Link>
+        </div>
       </div>
     </section>
   );
