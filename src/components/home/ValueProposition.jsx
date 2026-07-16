@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import ScrollingTicker from '../ui/ScrollingTicker';
-
-const LAPTOP_IMAGE = 'https://media.base44.com/images/public/6a239ffb5d3f7d9bfe82abfe/4f00097b0_generated_image.png';
+import BrowserMockup from '../ui/BrowserMockup';
 
 export default function ValueProposition() {
   const ref = useRef(null);
@@ -56,12 +55,9 @@ export default function ValueProposition() {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden rounded-2xl shadow-2xl shadow-emerald-900/10 aspect-[16/7]"
         >
-          <motion.img
-            src={LAPTOP_IMAGE}
-            alt="Custom website design on a laptop"
-            style={{ scale: imgScale, y: imgY }}
-            className="w-full h-full object-cover"
-          />
+          <motion.div style={{ scale: imgScale, y: imgY }} className="w-full h-full">
+            <BrowserMockup />
+          </motion.div>
           <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/20 to-transparent" />
           <div className="absolute bottom-5 left-5 bg-white/90 backdrop-blur-sm rounded-xl px-5 py-3 shadow-lg">
             <p className="font-mono text-xs text-emerald-600 uppercase tracking-widest">Custom built</p>

@@ -29,7 +29,7 @@ export default function RiverFall() {
   const straightPath = 'M 200 0 L 200 1000';
 
   return (
-    <section ref={ref} className="relative bg-[#040706]" style={{ height: '320vh' }}>
+    <section ref={ref} className="relative bg-[#040706]" style={{ height: '190vh' }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
         {/* Ambient dark backdrop, radioactive-tinted */}
         <div className="absolute inset-0" style={{
@@ -112,6 +112,15 @@ export default function RiverFall() {
             Ready when you are
           </p>
         </motion.div>
+
+        {/* Blend smoothly into the next (light) section instead of a hard cut */}
+        <motion.div
+          className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
+          style={{
+            opacity: useTransform(scrollYProgress, [0.85, 1], [0, 1]),
+            background: 'linear-gradient(180deg, transparent 0%, #ffffff 100%)',
+          }}
+        />
       </div>
     </section>
   );

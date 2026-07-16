@@ -53,7 +53,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center leading-none mb-10"
+          className="flex flex-col items-center leading-none mb-10 px-4"
         >
           <span className="font-display font-bold tracking-tighter text-white text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]">
             Green
@@ -62,12 +62,13 @@ export default function HeroSection() {
             Side
           </span>
           <span
-            className="font-display font-bold tracking-tighter italic text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9]"
+            className="font-display font-bold tracking-tight italic text-[18vw] md:text-[12vw] lg:text-[10vw] leading-[0.9] inline-block"
             style={{
               background: 'linear-gradient(90deg, #34d399 0%, #a7f3d0 50%, #34d399 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               filter: 'drop-shadow(0 0 24px rgba(52,211,153,0.35))',
+              paddingRight: '0.12em',
             }}
           >
             Designs

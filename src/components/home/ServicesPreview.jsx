@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Code2, Wrench, Layers } from 'lucide-react';
 import { STRIPE_LINKS } from '@/pages/Services';
 
 const services = [
@@ -12,6 +12,8 @@ const services = [
     description: 'A fully custom website built from scratch around your brand, your vision, your goals.',
     span: 'md:col-span-7',
     link: STRIPE_LINKS.website_creation,
+    icon: Code2,
+    glow: 'rgba(163,230,53,0.5)',
   },
   {
     id: 2,
@@ -20,6 +22,8 @@ const services = [
     description: '6 months of ongoing updates, changes, and maintenance. Your site stays fresh — you stay focused.',
     span: 'md:col-span-5',
     link: '/contact',
+    icon: Wrench,
+    glow: 'rgba(52,211,153,0.5)',
   },
   {
     id: 3,
@@ -28,14 +32,15 @@ const services = [
     description: 'Website creation + 6 months of moderation. The complete partnership, one price.',
     span: 'md:col-span-12',
     link: STRIPE_LINKS.bundle_package,
+    icon: Layers,
+    glow: 'rgba(45,212,191,0.5)',
   },
 ];
 
-function ServiceCard({ service, index, image }) {
+function ServiceCard({ service, index }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-40px" });
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const imgScale = useTransform(scrollYProgress, [0, 1], [1.0, 1.1]);
+  const Icon = service.icon;
 
   return (
     <motion.div
@@ -46,15 +51,18 @@ function ServiceCard({ service, index, image }) {
       className={`${service.span} group`}
     >
       <div className="relative overflow-hidden rounded-2xl h-full transition-all duration-300 border border-white/10 hover:border-emerald-400/50 hover:-translate-y-1 bg-[#0d1a14]">
-        {/* Card image */}
-        <div className="relative h-56 md:h-72 overflow-hidden">
-          <motion.img
-            src={image}
-            alt={service.title}
-            style={{ scale: imgScale }}
-            className="w-full h-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105"
+        {/* Card graphic — original glow + icon panel, no stock photo */}
+        <div className="relative h-56 md:h-72 overflow-hidden flex items-center justify-center">
+          <div
+            className="absolute inset-0 opacity-70 transition-transform duration-500 group-hover:scale-110"
+            style={{ background: `radial-gradient(circle at 50% 40%, ${service.glow} 0%, transparent 65%)` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a14] via-[#0d1a14]/20 to-transparent" />
+          <div
+            className="absolute inset-0 opacity-[0.06]"
+            style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+          />
+          <Icon className="relative w-16 h-16 md:w-20 md:h-20 text-white/80 group-hover:scale-110 transition-transform duration-500" strokeWidth={1.25} />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a14] via-transparent to-transparent" />
           <div className="absolute top-4 right-4 font-display text-lg font-bold text-white bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
             {service.price}
           </div>
@@ -78,7 +86,7 @@ function ServiceCard({ service, index, image }) {
   );
 }
 
-export default function ServicesPreview({ images }) {
+export default function ServicesPreview() {
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
 
@@ -111,7 +119,7 @@ export default function ServicesPreview({ images }) {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
           {services.map((service, i) => (
-            <ServiceCard key={service.id} service={service} index={i} image={images[i]} />
+            <ServiceCard key={service.id} service={service} index={i} />
           ))}
         </div>
       </div>

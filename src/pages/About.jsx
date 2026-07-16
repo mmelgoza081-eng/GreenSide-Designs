@@ -3,8 +3,8 @@ import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock, Heart } from 'lucide-react';
 import AmbientBackground from '@/components/ui/AmbientBackground';
+import PageSpaceHeader from '@/components/ui/PageSpaceHeader';
 
-const ABOUT_IMAGE = 'https://media.base44.com/images/public/6a239ffb5d3f7d9bfe82abfe/4221c8c43_generated_image.png';
 
 const values = [
   {
@@ -53,15 +53,14 @@ export default function About() {
   const storyInView = useInView(storyRef, { once: true, margin: "-80px" });
 
   return (
-    <div className="pt-20 relative">
+    <div className="relative">
       <AmbientBackground />
-      {/* Header */}
-      <section className="py-24 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-border">
+      <PageSpaceHeader>
         <div ref={headerRef}>
           <motion.p
             initial={{ opacity: 0 }}
             animate={headerInView ? { opacity: 1 } : {}}
-            className="font-mono text-xs uppercase tracking-[0.3em] text-velvet mb-6"
+            className="font-mono text-xs uppercase tracking-[0.3em] text-lime-300/80 mb-6"
           >
             About Us
           </motion.p>
@@ -69,12 +68,12 @@ export default function About() {
             initial={{ opacity: 0, y: 30 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.1, duration: 0.8 }}
-            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] max-w-4xl"
+            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] max-w-4xl text-white"
           >
             We're proud to be local.
           </motion.h1>
         </div>
-      </section>
+      </PageSpaceHeader>
 
       {/* Story section */}
       <section className="py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto">
@@ -115,13 +114,20 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="order-1 md:order-2"
           >
-            <div className="relative">
-              <img
-                src={ABOUT_IMAGE}
-                alt="Modern glass and concrete building at dusk with warm interior lighting"
-                className="w-full aspect-[4/5] object-cover"
+            <div className="relative aspect-[4/5] overflow-hidden bg-[#0a1410]">
+              <div className="absolute inset-0" style={{
+                background: 'radial-gradient(ellipse at 30% 20%, rgba(52,211,153,0.35) 0%, transparent 55%), radial-gradient(ellipse at 80% 85%, rgba(163,230,53,0.25) 0%, transparent 55%)',
+              }} />
+              <div
+                className="absolute inset-0 opacity-[0.08]"
+                style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
               />
-              <div className="absolute inset-0 border border-mercury/10" />
+              <div className="relative h-full flex flex-col items-center justify-center gap-4 px-8 text-center">
+                <MapPin className="w-10 h-10 text-emerald-300/80" strokeWidth={1.25} />
+                <p className="font-display text-2xl font-bold text-white">Lacey, Washington</p>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300/60">Working locally, building for anywhere</p>
+              </div>
+              <div className="absolute inset-0 border border-white/10" />
             </div>
           </motion.div>
         </div>

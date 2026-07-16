@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Send, CheckCircle, MapPin, Mail, Clock } from 'lucide-react';
 import AmbientBackground from '@/components/ui/AmbientBackground';
+import PageSpaceHeader from '@/components/ui/PageSpaceHeader';
 
 // 1. Create a free form at https://formspree.io (takes ~2 minutes)
 // 2. Point it at the email(s) you want inquiries sent to
@@ -79,15 +80,14 @@ export default function Contact() {
   }
 
   return (
-    <div className="pt-20 relative">
+    <div className="relative">
       <AmbientBackground />
-      {/* Header */}
-      <section className="py-24 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-border">
+      <PageSpaceHeader>
         <div ref={headerRef}>
           <motion.p
             initial={{ opacity: 0 }}
             animate={headerInView ? { opacity: 1 } : {}}
-            className="font-mono text-xs uppercase tracking-[0.3em] text-velvet mb-6"
+            className="font-mono text-xs uppercase tracking-[0.3em] text-lime-300/80 mb-6"
           >
             Contact
           </motion.p>
@@ -95,12 +95,12 @@ export default function Contact() {
             initial={{ opacity: 0, y: 30 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.1, duration: 0.8 }}
-            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] max-w-4xl"
+            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] max-w-4xl text-white"
           >
             Let's talk about your project.
           </motion.h1>
         </div>
-      </section>
+      </PageSpaceHeader>
 
       {/* Form and info */}
       <section className="py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto">
