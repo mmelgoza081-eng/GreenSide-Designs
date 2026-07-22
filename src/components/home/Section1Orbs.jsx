@@ -2,27 +2,6 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-// Two small glowing orbs that travel toward each other, collide near the
-// center, and bounce back apart — not blending into one, actually hitting.
-function MergingOrbs() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <motion.div
-        className="absolute top-1/2 rounded-full"
-        style={{ width: 22, height: 22, marginTop: -11, background: '#34d399', boxShadow: '0 0 16px 5px rgba(52,211,153,0.8)' }}
-        animate={{ left: ['8%', '46%', '8%'] }}
-        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', times: [0, 0.5, 1] }}
-      />
-      <motion.div
-        className="absolute top-1/2 rounded-full"
-        style={{ width: 22, height: 22, marginTop: -11, background: '#38bdf8', boxShadow: '0 0 16px 5px rgba(56,189,248,0.8)' }}
-        animate={{ left: ['92%', '54%', '92%'] }}
-        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', times: [0, 0.5, 1] }}
-      />
-    </div>
-  );
-}
-
 export default function Section1Orbs() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
@@ -40,7 +19,6 @@ export default function Section1Orbs() {
         backgroundPosition: 'center',
       }}
     >
-      <MergingOrbs />
 
       <motion.div style={{ scale: contentScale, opacity: contentOpacity }} className="relative z-10 flex flex-col items-center text-center px-6">
         <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/80 mb-6">Lacey, WA</p>
