@@ -14,15 +14,6 @@ export default function Section2NeonMountains() {
 
   return (
     <section ref={ref} className="relative h-screen overflow-hidden" style={{ background: '#050310' }}>
-      {/* Real starfield/space fills all the negative space — no black rectangle */}
-      <div className="absolute inset-0" style={{
-        background: 'radial-gradient(ellipse at 50% 15%, #14082e 0%, #08041a 55%, #030110 100%)',
-      }} />
-      <div
-        className="absolute inset-0 opacity-[0.18]"
-        style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '55px 55px' }}
-      />
-
       <motion.div style={{ scale: contentScale, opacity: contentOpacity }} className="absolute inset-0">
         {/* Lettering */}
         <div className="relative z-10 h-full flex flex-col items-center justify-start text-center px-6 pt-24 md:pt-32">
@@ -32,11 +23,10 @@ export default function Section2NeonMountains() {
           </h2>
         </div>
 
-        {/* The neon mountain range — starts low, rises into view as you scroll */}
+        {/* The neon mountain range — your image, filling the whole section */}
         <motion.div
-          className="absolute bottom-0 left-0 w-full"
+          className="absolute inset-0 w-full h-full"
           style={{
-            height: '70%',
             y: mountainY,
             backgroundImage: 'url(/images/neon-mountains-cropped.png)',
             backgroundSize: 'cover',
