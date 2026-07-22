@@ -6,11 +6,11 @@ import Section3GlowingDots from '../components/home/Section3GlowingDots';
 
 export default function Home() {
   return (
-    <>
+    <div className="relative">
       <Section1Orbs />
       <OrbsTransition />
       <Section2NeonMountains />
       <Section3GlowingDots />
-    </>
+    </div>
   );
 }
