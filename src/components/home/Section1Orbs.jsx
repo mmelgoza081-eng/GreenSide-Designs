@@ -2,23 +2,22 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-// Two glowing orbs of different colors, traveling across the page toward
-// each other and merging into one where they meet — the original base44
-// idea, brought back.
+// Two small glowing orbs that travel toward each other, collide near the
+// center, and bounce back apart — not blending into one, actually hitting.
 function MergingOrbs() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       <motion.div
         className="absolute top-1/2 rounded-full"
-        style={{ width: 260, height: 260, marginTop: -130, background: 'radial-gradient(circle, rgba(52,211,153,0.65) 0%, rgba(16,185,129,0.15) 60%, transparent 80%)' }}
-        animate={{ left: ['-10%', '48%', '-10%'] }}
-        transition={{ repeat: Infinity, duration: 10, ease: 'easeInOut' }}
+        style={{ width: 22, height: 22, marginTop: -11, background: '#34d399', boxShadow: '0 0 16px 5px rgba(52,211,153,0.8)' }}
+        animate={{ left: ['8%', '46%', '8%'] }}
+        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', times: [0, 0.5, 1] }}
       />
       <motion.div
         className="absolute top-1/2 rounded-full"
-        style={{ width: 260, height: 260, marginTop: -130, background: 'radial-gradient(circle, rgba(56,189,248,0.65) 0%, rgba(14,165,233,0.15) 60%, transparent 80%)' }}
-        animate={{ left: ['110%', '52%', '110%'] }}
-        transition={{ repeat: Infinity, duration: 10, ease: 'easeInOut' }}
+        style={{ width: 22, height: 22, marginTop: -11, background: '#38bdf8', boxShadow: '0 0 16px 5px rgba(56,189,248,0.8)' }}
+        animate={{ left: ['92%', '54%', '92%'] }}
+        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', times: [0, 0.5, 1] }}
       />
     </div>
   );

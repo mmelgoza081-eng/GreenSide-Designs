@@ -56,6 +56,11 @@ export default function Section2NeonMountains() {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const dropProgress = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
 
+  // The arc at the bottom of the mountain image opens up like a portal,
+  // expanding to reveal the lake beneath as you scroll through it.
+  const openRadius = useTransform(scrollYProgress, [0.35, 0.75], [0, 140]);
+  const openClip = useTransform(openRadius, r => `circle(${r}% at 50% 0%)`);
+
   return (
     <section ref={ref} className="relative h-screen overflow-hidden" style={{ background: '#050310' }}>
       <motion.div style={{ scale: contentScale, opacity: contentOpacity }} className="absolute inset-0">
@@ -67,19 +72,19 @@ export default function Section2NeonMountains() {
           </h2>
         </div>
 
-        {/* The neon mountain range — your reference image, used directly */}
+        {/* The neon mountain range — your reference image, cropped, stretched full-bleed */}
         <div
           className="absolute bottom-[30%] left-0 w-full"
           style={{
             height: '50%',
-            backgroundImage: 'url(/images/neon-mountains.png)',
+            backgroundImage: 'url(/images/neon-mountains-cropped.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center bottom',
           }}
         />
 
-        {/* The lake — a mirrored reflection of the same image, tinted */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden" style={{ height: '30%' }}>
+        {/* The lake — opens up like a portal through the arc, revealing the reflection beneath */}
+        <motion.div className="absolute bottom-0 left-0 w-full overflow-hidden" style={{ height: '30%', clipPath: openClip }}>
           <div className="absolute inset-0" style={{
             background: 'linear-gradient(180deg, rgba(20,10,40,0.85) 0%, rgba(10,5,25,0.95) 100%)',
           }} />
@@ -88,7 +93,7 @@ export default function Section2NeonMountains() {
             style={{
               top: 0,
               height: '160%',
-              backgroundImage: 'url(/images/neon-mountains.png)',
+              backgroundImage: 'url(/images/neon-mountains-cropped.png)',
               backgroundSize: 'cover',
               backgroundPosition: 'center bottom',
               transform: 'scaleY(-1)',
@@ -107,7 +112,7 @@ export default function Section2NeonMountains() {
           <div className="absolute right-[10%] top-0 bottom-0 w-24" style={{
             background: 'linear-gradient(90deg, transparent 0%, rgba(56,189,248,0.25) 100%)',
           }} />
-        </div>
+        </motion.div>
 
         {/* Neon dotted waterfall — pours off the lake's edge into the next section */}
         <NeonWaterfall dropProgress={dropProgress} />
