@@ -27,8 +27,8 @@ function WaterSparkle({ bgPosition }) {
           filter: 'brightness(1.4) contrast(2.6) saturate(1.1)',
           mixBlendMode: 'screen',
         }}
-        animate={{ opacity: [0.15, 0.4, 0.18, 0.42, 0.15] }}
-        transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
+        animate={{ opacity: [0.15, 0.4, 0.15] }}
+        transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
       />
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -39,8 +39,8 @@ function WaterSparkle({ bgPosition }) {
           filter: 'brightness(1.5) contrast(3) saturate(1.2) blur(0.6px)',
           mixBlendMode: 'screen',
         }}
-        animate={{ opacity: [0, 0.22, 0, 0.2, 0] }}
-        transition={{ repeat: Infinity, duration: 3.4, delay: 0.5, ease: 'easeInOut' }}
+        animate={{ opacity: [0, 0.22, 0] }}
+        transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
       />
     </>
   );
