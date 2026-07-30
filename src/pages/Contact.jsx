@@ -81,13 +81,13 @@ export default function Contact() {
 
   return (
     <div className="relative">
-      <AmbientBackground />
-      <PageSpaceHeader>
+      <AmbientBackground theme="amber" />
+      <PageSpaceHeader theme="contact">
         <div ref={headerRef}>
           <motion.p
             initial={{ opacity: 0 }}
             animate={headerInView ? { opacity: 1 } : {}}
-            className="font-mono text-xs uppercase tracking-[0.3em] text-lime-300/80 mb-6"
+            className="font-mono text-xs uppercase tracking-[0.3em] text-amber-300/80 mb-6"
           >
             Contact
           </motion.p>
@@ -104,9 +104,9 @@ export default function Contact() {
 
       {/* Form and info */}
       <section className="py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-16 md:gap-12 lg:gap-20">
           {/* Form */}
-          <div className="md:col-span-7">
+          <div className="md:col-span-2 lg:col-span-7">
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-3">
@@ -160,9 +160,11 @@ export default function Contact() {
                       <SelectValue placeholder="Select a service" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border-border rounded-md">
-                      <SelectItem value="website_creation">Website Creation — $400</SelectItem>
-                      <SelectItem value="website_moderation">6-Month Moderation — $120</SelectItem>
-                      <SelectItem value="bundle">Bundle Package — $500</SelectItem>
+                      <SelectItem value="website_creation">Website Creation — $500</SelectItem>
+                      <SelectItem value="one_month">1-Month Moderation — $35</SelectItem>
+                      <SelectItem value="domain_hosting">Domain &amp; Hosting — $20/mo</SelectItem>
+                      <SelectItem value="website_moderation">6-Month Moderation — $150</SelectItem>
+                      <SelectItem value="bundle">Bundle Package — $600</SelectItem>
                       <SelectItem value="other">Other / Not Sure</SelectItem>
                     </SelectContent>
                   </Select>
@@ -204,7 +206,7 @@ export default function Contact() {
           </div>
 
           {/* Info sidebar */}
-          <div className="md:col-span-4 md:col-start-9">
+          <div className="md:col-span-1 lg:col-span-4 lg:col-start-9">
             <div className="space-y-12">
               <div>
                 <div className="flex items-center gap-3 mb-4">

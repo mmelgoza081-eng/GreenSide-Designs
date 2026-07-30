@@ -4,11 +4,23 @@ import { motion } from 'framer-motion';
 // A whole field of glowing "radioactive" orbs at different depths — small ones
 // drift fast and subtle, big ones drift slow and bold. Designed to fill a
 // hero section so nothing reads as empty space.
-const PALETTES = [
-  { from: 'rgba(163,230,53,0.55)', via: 'rgba(101,163,13,0.2)' },   // radioactive lime
-  { from: 'rgba(52,211,153,0.55)', via: 'rgba(5,150,105,0.18)' },   // emerald
-  { from: 'rgba(45,212,191,0.5)', via: 'rgba(13,148,136,0.16)' },   // teal
-];
+export const ORB_PALETTES = {
+  green: [
+    { from: 'rgba(163,230,53,0.55)', via: 'rgba(101,163,13,0.2)' },   // radioactive lime
+    { from: 'rgba(52,211,153,0.55)', via: 'rgba(5,150,105,0.18)' },   // emerald
+    { from: 'rgba(45,212,191,0.5)', via: 'rgba(13,148,136,0.16)' },   // teal
+  ],
+  blue: [
+    { from: 'rgba(125,211,252,0.55)', via: 'rgba(3,105,161,0.2)' },   // sky
+    { from: 'rgba(96,165,250,0.5)', via: 'rgba(29,78,216,0.18)' },    // blue
+    { from: 'rgba(103,232,249,0.5)', via: 'rgba(8,145,178,0.16)' },   // cyan
+  ],
+  amber: [
+    { from: 'rgba(252,211,77,0.55)', via: 'rgba(180,83,9,0.2)' },     // amber
+    { from: 'rgba(251,146,60,0.5)', via: 'rgba(194,65,12,0.18)' },    // orange
+    { from: 'rgba(254,240,138,0.45)', via: 'rgba(161,98,7,0.16)' },   // gold
+  ],
+};
 
 function Orb({ size, top, left, drift, duration, palette, delay }) {
   return (
@@ -33,7 +45,8 @@ function Orb({ size, top, left, drift, duration, palette, delay }) {
   );
 }
 
-export default function RadioactiveOrbs({ count = 14 }) {
+export default function RadioactiveOrbs({ count = 14, palette = 'green' }) {
+  const palettes = ORB_PALETTES[palette] || ORB_PALETTES.green;
   const orbs = useMemo(() => (
     Array.from({ length: count }).map((_, i) => ({
       id: i,
@@ -43,9 +56,9 @@ export default function RadioactiveOrbs({ count = 14 }) {
       drift: 20 + Math.random() * 50,
       duration: 8 + Math.random() * 10,
       delay: Math.random() * 4,
-      palette: PALETTES[i % PALETTES.length],
+      palette: palettes[i % palettes.length],
     }))
-  ), [count]);
+  ), [count, palettes]);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">

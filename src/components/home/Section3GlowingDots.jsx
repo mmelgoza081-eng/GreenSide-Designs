@@ -17,6 +17,9 @@ export default function Section3GlowingDots() {
       size: Math.random() * 10 + 4,
       delay: Math.random() * 4,
       duration: Math.random() * 3 + 2.5,
+      driftX: 20 + Math.random() * 40,
+      driftY: 20 + Math.random() * 40,
+      driftDuration: 6 + Math.random() * 8,
     }))
   ), []);
 
@@ -35,8 +38,16 @@ export default function Section3GlowingDots() {
               background: '#0a0a0a',
               boxShadow: '0 0 10px 2px rgba(0,0,0,0.5)',
             }}
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ repeat: Infinity, duration: d.duration, delay: d.delay, ease: 'easeInOut' }}
+            animate={{
+              opacity: [0.4, 1, 0.4],
+              x: [0, d.driftX, -d.driftX * 0.4, 0],
+              y: [0, -d.driftY, d.driftY * 0.5, 0],
+            }}
+            transition={{
+              opacity: { repeat: Infinity, duration: d.duration, delay: d.delay, ease: 'easeInOut' },
+              x: { repeat: Infinity, duration: d.driftDuration, delay: d.delay, ease: 'easeInOut' },
+              y: { repeat: Infinity, duration: d.driftDuration * 1.15, delay: d.delay, ease: 'easeInOut' },
+            }}
           />
         ))}
       </div>

@@ -1,84 +1,82 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import {
+  DURATION_S,
+  SEAM_LINE_ANIM,
+  seamLineKeyframes,
+  seamLineInitialPath,
+} from './seamWave';
 
-// A small glowing plasma sphere — layered radial gradients for 3D shading,
-// an animated electric-turbulence texture for the "radiating" surface, and
-// a soft outer corona.
-function ElectricOrb({ color, filterId }) {
-  return (
-    <div className="relative" style={{ width: 44, height: 44 }}>
-      {/* Outer corona glow */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          inset: -14,
-          background: `radial-gradient(circle, ${color}55 0%, transparent 70%)`,
-        }}
-        animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.15, 1] }}
-        transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
-      />
-
-      {/* Electric surface texture */}
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="3" seed="6" result="noise">
-              <animate attributeName="seed" values="1;25;9;30;1" dur="0.8s" repeatCount="indefinite" />
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* The 3D sphere body */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: `radial-gradient(circle at 35% 30%, #ffffff 0%, ${color} 22%, ${color}cc 45%, ${color}55 70%, transparent 100%)`,
-          boxShadow: `0 0 18px 4px ${color}aa, inset -4px -4px 10px rgba(0,0,0,0.4)`,
-        }}
-      />
-
-      {/* Electric filaments over the surface */}
-      <div
-        className="absolute inset-0 rounded-full overflow-hidden"
-        style={{ filter: `url(#${filterId})`, mixBlendMode: 'screen' }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `repeating-radial-gradient(circle at 40% 35%, transparent 0px, transparent 3px, ${color}88 4px, transparent 5px)`,
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-// Two electric orbs floating transparently at the seam between two
-// sections — traveling toward each other, colliding, bouncing apart.
+// A thick, glowing radioactive current running the full width of the seam
+// between two sections. The undulation comes from the shared seam wave, so
+// the wavy edges of the images above and below it move as one shape with it.
 export default function OrbsTransition() {
+  const wave = {
+    d: seamLineInitialPath,
+    animation: `${SEAM_LINE_ANIM} ${DURATION_S}s linear infinite`,
+  };
+
   return (
-    <div
-      className="absolute left-0 w-full pointer-events-none z-30"
-      style={{ top: '100vh', height: 0 }}
-    >
-      <motion.div
-        className="absolute"
-        style={{ marginTop: -22 }}
-        animate={{ left: ['8%', '46%', '8%'] }}
-        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', times: [0, 0.5, 1] }}
+    <div className="absolute left-0 w-full pointer-events-none z-30" style={{ top: '100vh', height: 0, overflow: 'visible' }}>
+      <style>{`
+        ${seamLineKeyframes}
+        @keyframes seamWaveGlow {
+          0%, 100% { opacity: 0.55; }
+          40% { opacity: 0.85; }
+          70% { opacity: 0.65; }
+        }
+      `}</style>
+      <svg
+        viewBox="0 0 1000 100"
+        preserveAspectRatio="none"
+        className="absolute overflow-visible"
+        style={{ left: 0, top: -18, width: '100%', height: 36 }}
       >
-        <ElectricOrb color="#34d399" filterId="orbElectricGreen" />
-      </motion.div>
-      <motion.div
-        className="absolute"
-        style={{ marginTop: -22 }}
-        animate={{ left: ['92%', '54%', '92%'] }}
-        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', times: [0, 0.5, 1] }}
-      >
-        <ElectricOrb color="#38bdf8" filterId="orbElectricBlue" />
-      </motion.div>
+        <defs>
+          <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#65a30d" />
+            <stop offset="50%" stopColor="#a3e635" />
+            <stop offset="100%" stopColor="#65a30d" />
+          </linearGradient>
+        </defs>
+
+        {/* wide diffuse contamination glow */}
+        <path
+          fill="none"
+          stroke="url(#waveGrad)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={16}
+          style={{ ...wave, filter: 'blur(5px)', animation: `${SEAM_LINE_ANIM} ${DURATION_S}s linear infinite, seamWaveGlow 1.7s ease-in-out infinite` }}
+        />
+        {/* main body */}
+        <path
+          fill="none"
+          stroke="url(#waveGrad)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={9.5}
+          opacity={0.7}
+          style={{ ...wave, filter: 'blur(2.5px)' }}
+        />
+        {/* bright lime edge */}
+        <path
+          fill="none"
+          stroke="#bef264"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={5.5}
+          style={{ ...wave, filter: 'drop-shadow(0 0 7px #a3e635)' }}
+        />
+        {/* hot core */}
+        <path
+          fill="none"
+          stroke="#f7fee7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2.2}
+          style={wave}
+        />
+      </svg>
     </div>
   );
 }

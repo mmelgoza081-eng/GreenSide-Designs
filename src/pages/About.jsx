@@ -54,13 +54,13 @@ export default function About() {
 
   return (
     <div className="relative">
-      <AmbientBackground />
-      <PageSpaceHeader>
+      <AmbientBackground theme="blue" />
+      <PageSpaceHeader theme="blue">
         <div ref={headerRef}>
           <motion.p
             initial={{ opacity: 0 }}
             animate={headerInView ? { opacity: 1 } : {}}
-            className="font-mono text-xs uppercase tracking-[0.3em] text-lime-300/80 mb-6"
+            className="font-mono text-xs uppercase tracking-[0.3em] text-sky-300/80 mb-6"
           >
             About Us
           </motion.p>

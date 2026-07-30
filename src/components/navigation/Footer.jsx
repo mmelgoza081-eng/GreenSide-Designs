@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+// The footer sits at the bottom of every page — without this, clicking a
+// link here while scrolled down lands you at that same scroll position on
+// the new page instead of at its top.
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
 function LiveClock({ city, timezone }) {
   const [time, setTime] = useState('');
 
@@ -42,6 +49,7 @@ export default function Footer() {
               </p>
               <Link
                 to="/contact"
+                onClick={scrollToTop}
                 className="inline-block font-mono text-xs uppercase tracking-[0.15em] bg-velvet text-white px-8 py-4 hover:bg-velvet/80 transition-all duration-300 rounded-sm"
               >
                 Start a Project →
@@ -60,6 +68,7 @@ export default function Footer() {
                   <Link
                     key={link.path}
                     to={link.path}
+                    onClick={scrollToTop}
                     className="font-body text-sm text-white/50 hover:text-velvet transition-colors"
                   >
                     {link.label}
@@ -71,12 +80,12 @@ export default function Footer() {
             <div className="md:col-span-2">
               <h3 className="font-mono text-xs uppercase tracking-[0.2em] mb-6 text-white/30">Contact</h3>
               <div className="flex flex-col gap-2">
-                <p className="font-body text-sm text-white/50">support@green-side-designs.com</p>
+                <p className="font-body text-sm text-white/50">mmelgoza081@gmail.com</p>
                 <p className="font-body text-sm text-white/50">Lacey, WA</p>
               </div>
             </div>
 
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 md:pl-6">
               <h3 className="font-mono text-xs uppercase tracking-[0.2em] mb-6 text-white/30">Local Time</h3>
               <div className="flex flex-col gap-3">
                 <LiveClock city="Lacey, WA" timezone="America/Los_Angeles" />
