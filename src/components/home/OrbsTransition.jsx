@@ -37,6 +37,17 @@ export default function OrbsTransition() {
             <stop offset="50%" stopColor="#a3e635" />
             <stop offset="100%" stopColor="#65a30d" />
           </linearGradient>
+          {/* Native SVG blur instead of a CSS filter on the path — CSS
+              filter:blur() on SVG shapes is unreliable on mobile browsers
+              (notably iOS Safari), which silently drops these two green
+              glow layers there, leaving only the solid-color edge/core
+              paths below visible — the exact "line with no green" bug. */}
+          <filter id="seamBlurWide" x="-20%" y="-400%" width="140%" height="900%">
+            <feGaussianBlur stdDeviation="5" />
+          </filter>
+          <filter id="seamBlurMain" x="-20%" y="-400%" width="140%" height="900%">
+            <feGaussianBlur stdDeviation="2.5" />
+          </filter>
         </defs>
 
         {/* wide diffuse contamination glow */}
@@ -46,7 +57,8 @@ export default function OrbsTransition() {
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={16}
-          style={{ ...wave, filter: 'blur(5px)', animation: `${SEAM_LINE_ANIM} ${DURATION_S}s linear infinite, seamWaveGlow 1.7s ease-in-out infinite` }}
+          filter="url(#seamBlurWide)"
+          style={{ ...wave, animation: `${SEAM_LINE_ANIM} ${DURATION_S}s linear infinite, seamWaveGlow 1.7s ease-in-out infinite` }}
         />
         {/* main body */}
         <path
@@ -56,7 +68,8 @@ export default function OrbsTransition() {
           strokeLinejoin="round"
           strokeWidth={9.5}
           opacity={0.7}
-          style={{ ...wave, filter: 'blur(2.5px)' }}
+          filter="url(#seamBlurMain)"
+          style={wave}
         />
         {/* bright lime edge */}
         <path

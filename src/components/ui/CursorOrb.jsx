@@ -29,11 +29,20 @@ export default function CursorOrb() {
   const cursorX = useMotionValue(-200);
   const cursorY = useMotionValue(-200);
   const [clicked, setClicked] = useState(false);
+  // Touch devices have no real cursor. Without this check, a tap anywhere
+  // (which some mobile browsers report as a single synthetic mousemove for
+  // :hover compatibility) sets a stray position that then sticks — this
+  // component mounts once in the layout and never resets it — showing a
+  // dot frozen wherever you last tapped, on every page after that.
+  const [isTouchDevice] = useState(() => (
+    typeof window !== 'undefined' && !window.matchMedia('(pointer: fine)').matches
+  ));
 
   const springX = useSpring(cursorX, { stiffness: 120, damping: 18 });
   const springY = useSpring(cursorY, { stiffness: 120, damping: 18 });
 
   useEffect(() => {
+    if (isTouchDevice) return;
     const move = (e) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -48,7 +57,9 @@ export default function CursorOrb() {
       window.removeEventListener('mousedown', down);
       window.removeEventListener('mouseup', up);
     };
-  }, []);
+  }, [isTouchDevice]);
+
+  if (isTouchDevice) return null;
 
   return (
     <>

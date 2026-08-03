@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   AMPLITUDE_PX,
@@ -63,6 +63,33 @@ export default function Section2NeonMountains() {
   const transitionOpacity = useTransform(scrollYProgress, [0.22, 0.42], [0, 1]);
   const transitionScale = useTransform(scrollYProgress, [0.2, 0.85], [0.4, 3]);
 
+  // The circle's rising top edge = center (below viewport, fixed at
+  // top:129% + half its own height) minus its current radius, and its
+  // radius grows with transitionScale. Solving edge(s) = elementY for each
+  // line's measured on-screen position (headline ~270-366px, paragraph
+  // ~386-482px of 720px viewport height at 1280px width) and converting
+  // that scale back to scrollYProgress gives the exact point each line's
+  // bottom edge is first touched, rather than a guessed scroll amount.
+  // Each still snaps (tight input range, no gray in between).
+  const paragraphColor = useTransform(scrollYProgress, [0.5, 0.505], ['#ffffff', '#0a0a0a']);
+  const headlineColor = useTransform(scrollYProgress, [0.54, 0.545], ['#ffffff', '#0a0a0a']);
+
+  // Same dot field as the actual white "What We Do" section below — so as
+  // the circle opens, it's genuinely revealing that page's own look, not a
+  // plain gradient standing in for it. Positioned as % of this circle's own
+  // box, so they scale up together with it and stay properly clipped to
+  // whatever portion of the circle is currently visible.
+  const transitionDots = useMemo(() => (
+    Array.from({ length: 40 }).map((_, i) => ({
+      id: i,
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      size: Math.random() * 10 + 4,
+      delay: Math.random() * 4,
+      duration: Math.random() * 3 + 2.5,
+    }))
+  ), []);
+
   return (
     <section
       ref={ref}
@@ -100,25 +127,42 @@ export default function Section2NeonMountains() {
         />
 
         <motion.div
-          className="absolute pointer-events-none"
+          className="absolute pointer-events-none overflow-hidden"
           style={{
             left: '50%', top: '129%', width: '116%', aspectRatio: '1/1', marginLeft: '-58%',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(237,242,255,1) 55%, rgba(191,219,254,0.9) 83%, rgba(147,197,253,0.5) 93%, transparent 100%)',
+            background: '#ffffff',
             boxShadow: '0 0 50px 14px rgba(191,219,254,0.7), 0 0 130px 36px rgba(147,197,253,0.4)',
             opacity: transitionOpacity,
             scale: transitionScale,
           }}
-        />
+        >
+          {transitionDots.map(d => (
+            <motion.div
+              key={d.id}
+              className="absolute rounded-full"
+              style={{
+                top: `${d.top}%`,
+                left: `${d.left}%`,
+                width: d.size,
+                height: d.size,
+                background: '#0a0a0a',
+                boxShadow: '0 0 10px 2px rgba(0,0,0,0.5)',
+              }}
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ repeat: Infinity, duration: d.duration, delay: d.delay, ease: 'easeInOut' }}
+            />
+          ))}
+        </motion.div>
 
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-sky-200/90 mb-4">From idea to launch</p>
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-white leading-tight max-w-lg" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>
+          <motion.h2 className="font-display text-3xl md:text-5xl font-bold leading-tight max-w-lg" style={{ color: headlineColor, textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>
             No detours. Just a straight line to launch.
-          </h2>
-          <p className="font-body text-sm md:text-base text-white/70 leading-relaxed max-w-md mt-5" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
+          </motion.h2>
+          <motion.p className="font-body text-sm md:text-base leading-relaxed max-w-md mt-5" style={{ color: paragraphColor, opacity: 0.85, textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
             We're committed to building custom websites shaped around your business's specific needs — not a template with your logo dropped in. Every site we build starts with understanding what you actually do and who you're trying to reach.
-          </p>
+          </motion.p>
         </div>
       </div>
     </section>
