@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SideNav from '@/components/navigation/SideNav';
 import { AMPLITUDE_PX } from './seamWave';
@@ -7,9 +7,13 @@ import { AMPLITUDE_PX } from './seamWave';
 export default function Section1Orbs() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  // Smooths out the choppier, more frequent deltas a trackpad sends
+  // compared to a mouse wheel, so this scroll-linked motion stays fluid
+  // regardless of input device.
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 });
 
-  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.7]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 1, 0]);
+  const contentScale = useTransform(smoothProgress, [0, 1], [1, 0.7]);
+  const contentOpacity = useTransform(smoothProgress, [0, 0.8, 1], [1, 1, 0]);
 
   return (
     <section

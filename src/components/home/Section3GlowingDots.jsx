@@ -1,13 +1,17 @@
 import React, { useMemo, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 
 export default function Section3GlowingDots() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  // Smooths out the choppier, more frequent deltas a trackpad sends
+  // compared to a mouse wheel, so this scroll-linked motion stays fluid
+  // regardless of input device.
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 });
 
   // Expand in as it arrives
-  const contentScale = useTransform(scrollYProgress, [0, 0.3], [0.75, 1]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
+  const contentScale = useTransform(smoothProgress, [0, 0.3], [0.75, 1]);
+  const contentOpacity = useTransform(smoothProgress, [0, 0.25], [0, 1]);
 
   const dots = useMemo(() => (
     Array.from({ length: 40 }).map((_, i) => ({
