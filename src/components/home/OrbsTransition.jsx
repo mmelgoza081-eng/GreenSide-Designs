@@ -1,24 +1,30 @@
 import React from 'react';
 import {
   DURATION_S,
-  SEAM_LINE_ANIM,
-  seamLineKeyframes,
-  seamLineInitialPath,
+  seamLineRawInitialPath,
+  seamLineAnimateValues,
 } from './seamWave';
+
+// Shared <animate> props for the seam's shape — SVG native SMIL animation on
+// the `d` attribute, not the CSS `d` property, since CSS `d` keyframe
+// animation has much patchier mobile browser support (some engines silently
+// leave the path at its unanimated/empty state, which reads as "the wavy
+// edge is there but the green line isn't").
+const dAnimateProps = {
+  attributeName: 'd',
+  values: seamLineAnimateValues,
+  dur: `${DURATION_S}s`,
+  repeatCount: 'indefinite',
+  calcMode: 'linear',
+};
 
 // A thick, glowing radioactive current running the full width of the seam
 // between two sections. The undulation comes from the shared seam wave, so
 // the wavy edges of the images above and below it move as one shape with it.
 export default function OrbsTransition() {
-  const wave = {
-    d: seamLineInitialPath,
-    animation: `${SEAM_LINE_ANIM} ${DURATION_S}s linear infinite`,
-  };
-
   return (
     <div className="absolute left-0 w-full pointer-events-none z-30" style={{ top: '100vh', height: 0, overflow: 'visible' }}>
       <style>{`
-        ${seamLineKeyframes}
         @keyframes seamWaveGlow {
           0%, 100% { opacity: 0.55; }
           40% { opacity: 0.85; }
@@ -58,8 +64,11 @@ export default function OrbsTransition() {
           strokeLinejoin="round"
           strokeWidth={16}
           filter="url(#seamBlurWide)"
-          style={{ ...wave, animation: `${SEAM_LINE_ANIM} ${DURATION_S}s linear infinite, seamWaveGlow 1.7s ease-in-out infinite` }}
-        />
+          d={seamLineRawInitialPath}
+          style={{ animation: 'seamWaveGlow 1.7s ease-in-out infinite' }}
+        >
+          <animate {...dAnimateProps} />
+        </path>
         {/* main body */}
         <path
           fill="none"
@@ -69,8 +78,10 @@ export default function OrbsTransition() {
           strokeWidth={9.5}
           opacity={0.7}
           filter="url(#seamBlurMain)"
-          style={wave}
-        />
+          d={seamLineRawInitialPath}
+        >
+          <animate {...dAnimateProps} />
+        </path>
         {/* bright lime edge */}
         <path
           fill="none"
@@ -78,8 +89,11 @@ export default function OrbsTransition() {
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={5.5}
-          style={{ ...wave, filter: 'drop-shadow(0 0 7px #a3e635)' }}
-        />
+          style={{ filter: 'drop-shadow(0 0 7px #a3e635)' }}
+          d={seamLineRawInitialPath}
+        >
+          <animate {...dAnimateProps} />
+        </path>
         {/* hot core */}
         <path
           fill="none"
@@ -87,8 +101,10 @@ export default function OrbsTransition() {
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2.2}
-          style={wave}
-        />
+          d={seamLineRawInitialPath}
+        >
+          <animate {...dAnimateProps} />
+        </path>
       </svg>
     </div>
   );

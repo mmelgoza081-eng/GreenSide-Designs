@@ -29,7 +29,7 @@ function offsetAt(offs, i) {
   return i === 0 || i === LAST ? 0 : offs[i - 1];
 }
 
-function linePath(step) {
+function rawLinePath(step) {
   const offs = offsetsAt(step);
   const pts = [];
   for (let i = 0; i <= LAST; i++) {
@@ -37,7 +37,7 @@ function linePath(step) {
     const y = 50 - offsetAt(offs, i) * UNITS_PER_PX;
     pts.push(`${x.toFixed(1)},${y.toFixed(2)}`);
   }
-  return `path("M ${pts.join(' L ')}")`;
+  return `M ${pts.join(' L ')}`;
 }
 
 // Clip for the section below the seam: its top edge carries the wave, and
@@ -65,13 +65,22 @@ function keyframes(name, prop, valueAt) {
   return `@keyframes ${name} { ${frames.join(' ')} }`;
 }
 
-export const SEAM_LINE_ANIM = 'seamWaveLine';
 export const SEAM_CLIP_ANIM = 'seamWaveClip';
 
-export const seamLineKeyframes = keyframes(SEAM_LINE_ANIM, 'd', linePath);
 export const seamClipKeyframes = keyframes(SEAM_CLIP_ANIM, 'clip-path', clipTopEdge);
 
-// Static starting values, so the shape is already correct on first paint and
-// in browsers that won't animate these properties.
-export const seamLineInitialPath = linePath(0);
+// Static starting value, so the shape is already correct on first paint and
+// in browsers that won't animate this property.
 export const seamClipInitialPath = clipTopEdge(0);
+
+// The glowing seam line animates its shape via an SVG native <animate
+// attributeName="d"> instead of the CSS `d` property used above — CSS `d`
+// keyframe animation has much patchier mobile browser support (some engines
+// silently leave the path at an empty/invalid `d` when they don't support
+// it, which reads as "the wavy edge is there but the green line isn't").
+// SMIL attribute animation on `d` is supported far more broadly.
+export const seamLineRawInitialPath = rawLinePath(0);
+export const seamLineAnimateValues = [
+  ...Array.from({ length: STEPS }, (_, s) => rawLinePath(s)),
+  rawLinePath(0),
+].join(';');
