@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,6 +27,15 @@ export default function Contact() {
 
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
+
+  // Submitting swaps the whole page for the much shorter "Message Sent"
+  // view without a route change, so the router's scroll-to-top never fires
+  // — the browser just leaves you at whatever scroll position you were at,
+  // which on mobile (long, stacked form) is often well past where the short
+  // confirmation view ends.
+  useEffect(() => {
+    if (submitted) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [submitted]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
