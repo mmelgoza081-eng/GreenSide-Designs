@@ -91,18 +91,18 @@ export default function About() {
             </h2>
             <div className="space-y-5 font-body text-base text-muted-foreground leading-relaxed">
               <p>
-                GreenSide Designs started with a simple belief: every small business deserves a website 
-                that truly represents who they are. Not a cookie-cutter template. Not a 
+                GreenSide Designs started with a simple belief: every small business deserves a website
+                that truly represents who they are. Not a cookie-cutter template. Not a
                 one-size-fits-all solution. Something uniquely yours.
               </p>
               <p>
-                Based in Lacey, Washington, I'm dedicated to helping businesses in my 
-                community — and beyond — establish a powerful digital presence. When you 
-                work with me, you're not just getting a website. You're getting a partner 
+                Based in Lacey, Washington, I'm dedicated to helping businesses in my
+                community — and beyond — establish a powerful digital presence. When you
+                work with me, you're not just getting a website. You're getting a partner
                 who's genuinely invested in your success.
               </p>
               <p>
-                I handle everything from design to deployment to ongoing support, so you 
+                I handle everything from design to deployment to ongoing support, so you
                 can focus on what you do best: running your business.
               </p>
             </div>

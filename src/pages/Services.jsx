@@ -47,7 +47,7 @@ function BasicCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="border border-border bg-card p-8 md:p-12 flex flex-col"
+      className="border border-border bg-card p-8 md:p-12 flex flex-col rounded-3xl"
     >
       <div className="mb-8">
         <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">Website Creation</h3>
@@ -70,7 +70,7 @@ function BasicCard({ index }) {
       <Link
         to="/contact"
         onClick={scrollToTop}
-        className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300"
+        className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 rounded-full"
       >
         Get Now <ArrowRight className="w-3.5 h-3.5" />
       </Link>
@@ -88,7 +88,7 @@ function HostingCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="border border-border bg-card p-8 md:p-12 flex flex-col"
+      className="border border-border bg-card p-8 md:p-12 flex flex-col rounded-3xl"
     >
       <div className="mb-8">
         <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">Domain & Hosting</h3>
@@ -111,7 +111,7 @@ function HostingCard({ index }) {
           </div>
         ))}
       </div>
-      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300">
+      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 rounded-full">
         Get Now <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     </motion.div>
@@ -128,7 +128,7 @@ function OneMonthCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="border border-border bg-card p-8 md:p-12 flex flex-col"
+      className="border border-border bg-card p-8 md:p-12 flex flex-col rounded-3xl"
     >
       <div className="mb-8">
         <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">1-Month Moderation</h3>
@@ -151,7 +151,7 @@ function OneMonthCard({ index }) {
           </div>
         ))}
       </div>
-      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300">
+      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 rounded-full">
         Get Now <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     </motion.div>
@@ -168,7 +168,7 @@ function HalfYearCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="relative border border-velvet/50 bg-card overflow-hidden"
+      className="relative border border-velvet/50 bg-card overflow-hidden rounded-3xl"
     >
       {/* Side accent bar */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-velvet" />
@@ -193,7 +193,7 @@ function HalfYearCard({ index }) {
               </div>
             </div>
           </div>
-          <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 mt-auto">
+          <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 mt-auto rounded-full">
             Get Now <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -228,7 +228,7 @@ function BundleCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="relative border border-velvet bg-card overflow-hidden"
+      className="relative border border-velvet bg-card overflow-hidden rounded-3xl"
     >
       {/* Top accent bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-velvet" />
@@ -262,7 +262,7 @@ function BundleCard({ index }) {
           <Link
             to="/contact"
             onClick={scrollToTop}
-            className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 mt-auto"
+            className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 mt-auto rounded-full"
           >
             Get Now <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -333,23 +333,27 @@ export default function Services() {
       </PageSpaceHeader>
 
       {/* Service cards */}
-      <section className="py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto">
+      <section className="relative py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto overflow-hidden">
+        <div
+          className="absolute inset-0 -z-10 opacity-[0.06] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle, #1E6B3C 1.5px, transparent 1.5px)', backgroundSize: '40px 40px' }}
+        />
         <div className="space-y-4">
           {/* Bundle leads — best value, first thing you see */}
           <BundleCard index={0} />
-          <HalfYearCard index={1} />
-          {/* Basic + one-month cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <BasicCard index={2} />
-            <OneMonthCard index={3} />
+          {/* Basic, one-month, and hosting side by side */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <BasicCard index={1} />
+            <OneMonthCard index={2} />
+            <HostingCard index={3} />
           </div>
-          {/* Standalone hosting */}
-          <HostingCard index={4} />
+          {/* 6-month plan closes out the pricing list */}
+          <HalfYearCard index={4} />
         </div>
       </section>
 
       {/* FAQ-like trust section */}
-      <section className="py-24 px-6 md:px-12 max-w-[1440px] mx-auto border-t border-border">
+      <section className="relative py-24 px-6 md:px-12 max-w-[1440px] mx-auto border-t border-border overflow-hidden" style={{ background: 'linear-gradient(180deg, rgba(30,107,60,0.06) 0%, transparent 100%)' }}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-velvet mb-4">Why GreenSide</p>

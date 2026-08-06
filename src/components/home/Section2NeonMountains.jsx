@@ -230,7 +230,7 @@ export default function Section2NeonMountains() {
         </motion.div>
 
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-sky-200/90 mb-4">From idea to launch</p>
+          <p className="font-mono text-base md:text-lg uppercase tracking-[0.3em] text-sky-200/90 mb-4">From idea to launch</p>
 
           <div ref={headlineWrapRef} className="relative max-w-lg">
             <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight text-white" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>
