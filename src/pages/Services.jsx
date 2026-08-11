@@ -20,9 +20,21 @@ function scrollToTop() {
 
 // A small tilted sticker pinned to the upper-right corner of a price,
 // showing the actual dollar amount 9.8% sales tax adds to that specific
-// price — not a generic percentage.
+// price — not a generic percentage. On mobile the rotated sticker got
+// cramped next to the (already large) price, so it's plain inline green
+// text there instead — same information, no floating box.
 function TaxBadge({ price, extraDown = 0 }) {
   const tax = (price * 0.098).toFixed(2);
+  const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  if (isMobileViewport) {
+    return (
+      <span className="font-mono text-sm text-velvet font-semibold whitespace-nowrap">
+        + ${tax} tax
+      </span>
+    );
+  }
+
   return (
     <span
       className="absolute top-0 left-full font-body text-xs font-bold uppercase tracking-wide bg-velvet text-white px-3 py-1.5 rounded-sm select-none shadow-sm whitespace-nowrap"
@@ -47,19 +59,22 @@ function BasicCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="border border-border bg-card p-8 md:p-12 flex flex-col rounded-3xl"
+      className="border border-border bg-card p-5 md:p-12 flex flex-col rounded-3xl"
     >
-      <div className="mb-8">
-        <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">Website Creation</h3>
+      <div className="mb-4 md:mb-8">
+        <h3 className="font-display text-2xl md:text-4xl font-bold mb-4">Website Creation</h3>
         <p className="font-body text-sm text-mercury/40 leading-relaxed">A fully custom website built from scratch around your brand, your vision, and your goals. No templates — just you.</p>
       </div>
-      <div className="mb-8 pt-4">
-        <span className="relative inline-block leading-none">
-          <span className="font-display text-5xl md:text-6xl font-bold text-velvet">$500</span>
-          <TaxBadge price={500} />
-        </span>
+      <div className="mb-4 md:mb-8 pt-4">
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span className="relative inline-block leading-none">
+            <span className="font-display text-4xl md:text-6xl font-bold text-velvet">$500</span>
+            <TaxBadge price={500} />
+          </span>
+          <span className="font-mono text-xs text-mercury/40">one-time</span>
+        </div>
       </div>
-      <div className="flex-1 mb-10 space-y-4">
+      <div className="flex-1 mb-6 md:mb-10 space-y-2 md:space-y-4">
         {['Custom design tailored to your brand', 'Mobile-responsive on all devices', 'Contact forms & integrations', 'Fast, clean performance', 'We\'ll keep refining it together until you\'re happy with it', 'Domain & hosting managed for your first month', 'Launch-ready deployment'].map((f, i) => (
           <div key={i} className="flex items-start gap-3">
             <Check className="w-4 h-4 text-velvet flex-shrink-0 mt-0.5" />
@@ -70,7 +85,7 @@ function BasicCard({ index }) {
       <Link
         to="/contact"
         onClick={scrollToTop}
-        className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 rounded-full"
+        className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 rounded-full"
       >
         Get Now <ArrowRight className="w-3.5 h-3.5" />
       </Link>
@@ -88,22 +103,22 @@ function HostingCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="border border-border bg-card p-8 md:p-12 flex flex-col rounded-3xl"
+      className="border border-border bg-card p-5 md:p-12 flex flex-col rounded-3xl"
     >
-      <div className="mb-8">
-        <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">Domain & Hosting</h3>
+      <div className="mb-4 md:mb-8">
+        <h3 className="font-display text-2xl md:text-4xl font-bold mb-4">Domain & Hosting</h3>
         <p className="font-body text-sm text-mercury/40 leading-relaxed">Just need your site online and looked after? I'll handle the domain and hosting so you never have to think about it.</p>
       </div>
-      <div className="mb-8 pt-4">
-        <div className="flex items-baseline gap-2">
+      <div className="mb-4 md:mb-8 pt-4">
+        <div className="flex items-baseline gap-2 flex-wrap">
           <span className="relative inline-block leading-none">
-            <span className="font-display text-5xl md:text-6xl font-bold text-velvet">$20</span>
+            <span className="font-display text-4xl md:text-6xl font-bold text-velvet">$20</span>
             <TaxBadge price={20} extraDown={5} />
           </span>
           <span className="font-mono text-xs text-mercury/40">/ month</span>
         </div>
       </div>
-      <div className="flex-1 mb-10 space-y-4">
+      <div className="flex-1 mb-6 md:mb-10 space-y-2 md:space-y-4">
         {['Domain registration & renewal handled', 'Reliable hosting, always online', 'SSL certificate included', 'I handle any technical issues that come up'].map((f, i) => (
           <div key={i} className="flex items-start gap-3">
             <Check className="w-4 h-4 text-velvet flex-shrink-0 mt-0.5" />
@@ -111,7 +126,7 @@ function HostingCard({ index }) {
           </div>
         ))}
       </div>
-      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 rounded-full">
+      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 rounded-full">
         Get Now <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     </motion.div>
@@ -128,22 +143,22 @@ function OneMonthCard({ index }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="border border-border bg-card p-8 md:p-12 flex flex-col rounded-3xl"
+      className="border border-border bg-card p-5 md:p-12 flex flex-col rounded-3xl"
     >
-      <div className="mb-8">
-        <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">1-Month Moderation</h3>
+      <div className="mb-4 md:mb-8">
+        <h3 className="font-display text-2xl md:text-4xl font-bold mb-4">1-Month Moderation</h3>
         <p className="font-body text-sm text-mercury/40 leading-relaxed">Not ready to commit long-term? Get a single month of updates, changes, and maintenance — no strings attached.</p>
       </div>
-      <div className="mb-8 pt-4">
-        <div className="flex items-baseline gap-2">
+      <div className="mb-4 md:mb-8 pt-4">
+        <div className="flex items-baseline gap-2 flex-wrap">
           <span className="relative inline-block leading-none">
-            <span className="font-display text-5xl md:text-6xl font-bold text-velvet">$35</span>
+            <span className="font-display text-4xl md:text-6xl font-bold text-velvet">$35</span>
             <TaxBadge price={35} />
           </span>
           <span className="font-mono text-xs text-mercury/40">/ month</span>
         </div>
       </div>
-      <div className="flex-1 mb-10 space-y-4">
+      <div className="flex-1 mb-6 md:mb-10 space-y-2 md:space-y-4">
         {['Unlimited content updates', 'Always available to contact', 'Security patches & updates', 'Priority response time', 'Domain & hosting managed for the month'].map((f, i) => (
           <div key={i} className="flex items-start gap-3">
             <Check className="w-4 h-4 text-velvet flex-shrink-0 mt-0.5" />
@@ -151,7 +166,7 @@ function OneMonthCard({ index }) {
           </div>
         ))}
       </div>
-      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 rounded-full">
+      <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 rounded-full">
         Get Now <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     </motion.div>
@@ -175,17 +190,17 @@ function HalfYearCard({ index }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2">
         {/* Main content */}
-        <div className="p-8 md:p-12 flex flex-col">
+        <div className="p-5 md:p-12 flex flex-col">
           <div className="flex items-center gap-3 mb-6">
             <Zap className="w-5 h-5 text-velvet" />
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-velvet">Special Offer</span>
           </div>
-          <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">6-Month Moderation</h3>
-          <p className="font-body text-sm text-mercury/40 leading-relaxed mb-8">Lock in 6 full months of ongoing updates, changes, and maintenance at a reduced rate. Your site stays sharp while you focus on your business.</p>
-          <div className="mb-8 pt-4">
-            <div className="flex items-baseline gap-2">
+          <h3 className="font-display text-2xl md:text-4xl font-bold mb-4">6-Month Moderation</h3>
+          <p className="font-body text-sm text-mercury/40 leading-relaxed mb-4 md:mb-8">Lock in 6 full months of ongoing updates, changes, and maintenance at a reduced rate. Your site stays sharp while you focus on your business.</p>
+          <div className="mb-4 md:mb-8 pt-4">
+            <div className="flex items-baseline gap-2 flex-wrap">
               <span className="relative inline-block leading-none">
-                <span className="font-display text-5xl md:text-6xl font-bold text-velvet">$150</span>
+                <span className="font-display text-4xl md:text-6xl font-bold text-velvet">$150</span>
                 <TaxBadge price={150} />
               </span>
               <div className="flex flex-col">
@@ -193,15 +208,15 @@ function HalfYearCard({ index }) {
               </div>
             </div>
           </div>
-          <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 mt-auto rounded-full">
+          <Link to="/contact" onClick={scrollToTop} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 mt-auto rounded-full">
             Get Now <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {/* Side details */}
-        <div className="border-t md:border-t-0 md:border-l border-velvet/20 bg-velvet/5 p-8 md:p-12 flex flex-col justify-center">
+        <div className="border-t md:border-t-0 md:border-l border-velvet/20 bg-velvet/5 p-5 md:p-12 flex flex-col justify-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-velvet mb-6">What's included</p>
-          <div className="space-y-4 mb-8">
+          <div className="space-y-2 md:space-y-4 mb-4 md:mb-8">
             {['Unlimited content updates', 'Always available to contact', 'Performance monitoring', 'Security patches & updates', 'Priority response time', 'Domain & hosting managed all 6 months'].map((f, i) => (
               <div key={i} className="flex items-start gap-3">
                 <Check className="w-4 h-4 text-velvet flex-shrink-0 mt-0.5" />
@@ -241,17 +256,17 @@ function BundleCard({ index }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2">
         {/* Main content */}
-        <div className="p-8 md:p-12 flex flex-col pt-14 md:pt-12">
+        <div className="p-5 md:p-12 flex flex-col pt-14 md:pt-12">
           <div className="flex items-center gap-3 mb-6">
             <Star className="w-5 h-5 text-velvet" />
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-velvet">Complete Package</span>
           </div>
-          <h3 className="font-display text-3xl md:text-4xl font-bold mb-4">Bundle Package</h3>
-          <p className="font-body text-sm text-mercury/40 leading-relaxed mb-8">The full experience — custom website build plus 6 months of hands-on moderation. Everything you need to launch and grow, one price.</p>
-          <div className="mb-8 pt-4">
-            <div className="flex items-baseline gap-2">
+          <h3 className="font-display text-2xl md:text-4xl font-bold mb-4">Bundle Package</h3>
+          <p className="font-body text-sm text-mercury/40 leading-relaxed mb-4 md:mb-8">The full experience — custom website build plus 6 months of hands-on moderation. Everything you need to launch and grow, one price.</p>
+          <div className="mb-4 md:mb-8 pt-4">
+            <div className="flex items-baseline gap-2 flex-wrap">
               <span className="relative inline-block leading-none">
-                <span className="font-display text-5xl md:text-6xl font-bold text-velvet">$600</span>
+                <span className="font-display text-4xl md:text-6xl font-bold text-velvet">$600</span>
                 <TaxBadge price={600} />
               </span>
               <div className="flex flex-col">
@@ -262,16 +277,16 @@ function BundleCard({ index }) {
           <Link
             to="/contact"
             onClick={scrollToTop}
-            className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-8 py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 mt-auto rounded-full"
+            className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 mt-auto rounded-full"
           >
             Get Now <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {/* Side details */}
-        <div className="border-t md:border-t-0 md:border-l border-velvet/30 bg-velvet/5 p-8 md:p-12 flex flex-col justify-center">
+        <div className="border-t md:border-t-0 md:border-l border-velvet/30 bg-velvet/5 p-5 md:p-12 flex flex-col justify-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-velvet mb-6">Everything included</p>
-          <div className="space-y-4 mb-8">
+          <div className="space-y-2 md:space-y-4 mb-4 md:mb-8">
             {['Custom website from scratch', 'Mobile-responsive design', 'Launch-ready deployment', '6 months of full moderation', 'Unlimited content updates', 'Priority onboarding & support', 'Extended revision rounds', 'Domain & hosting managed all 6 months'].map((f, i) => (
               <div key={i} className="flex items-start gap-3">
                 <Check className="w-4 h-4 text-velvet flex-shrink-0 mt-0.5" />
@@ -291,6 +306,10 @@ function BundleCard({ index }) {
 export default function Services() {
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
+  // Mobile-only reorder: 6-Month Moderation moves up to 3rd instead of
+  // trailing at the very bottom of the list. Desktop keeps its existing
+  // "featured card, then a 3-up grid, then 6-month" layout untouched.
+  const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <div className="relative">
@@ -332,42 +351,60 @@ export default function Services() {
         </div>
       </PageSpaceHeader>
 
-      {/* Service cards */}
-      <section className="relative py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto overflow-hidden">
+      {/* Service cards — the colored background runs the full width of the
+          page; only the content inside stays centered at 1440px. */}
+      <section
+        className="relative py-10 md:py-32 overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #dde5d9 0%, #cfded0 25%, #c9d8c6 50%, #dbe0cf 75%, #ece7db 100%)' }}
+      >
         <div
-          className="absolute inset-0 -z-10 opacity-[0.06] pointer-events-none"
+          className="absolute inset-0 -z-10 opacity-[0.07] pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle, #1E6B3C 1.5px, transparent 1.5px)', backgroundSize: '40px 40px' }}
         />
-        <div className="space-y-4">
-          {/* Bundle leads — best value, first thing you see */}
-          <BundleCard index={0} />
-          {/* Basic, one-month, and hosting side by side */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <BasicCard index={1} />
-            <OneMonthCard index={2} />
-            <HostingCard index={3} />
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+          <div className="space-y-3 md:space-y-4">
+            {isMobileViewport ? (
+              <>
+                <BundleCard index={0} />
+                <BasicCard index={1} />
+                <HalfYearCard index={2} />
+                <OneMonthCard index={3} />
+                <HostingCard index={4} />
+              </>
+            ) : (
+              <>
+                {/* Bundle leads — best value, first thing you see */}
+                <BundleCard index={0} />
+                {/* Basic, one-month, and hosting side by side */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+                  <BasicCard index={1} />
+                  <OneMonthCard index={2} />
+                  <HostingCard index={3} />
+                </div>
+                {/* 6-month plan closes out the pricing list */}
+                <HalfYearCard index={4} />
+              </>
+            )}
           </div>
-          {/* 6-month plan closes out the pricing list */}
-          <HalfYearCard index={4} />
         </div>
       </section>
 
       {/* FAQ-like trust section */}
-      <section className="relative py-24 px-6 md:px-12 max-w-[1440px] mx-auto border-t border-border overflow-hidden" style={{ background: 'linear-gradient(180deg, rgba(30,107,60,0.06) 0%, transparent 100%)' }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+      <section className="relative py-10 md:py-24 border-t border-border overflow-hidden" style={{ background: 'linear-gradient(160deg, #ece7db 0%, #dbe0cf 40%, #dde5d9 100%)' }}>
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-velvet mb-4">Why GreenSide</p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold leading-[1.1]">
+            <h2 className="font-display text-3xl md:text-5xl font-bold leading-[1.1]">
               Not just a website. A partnership.
             </h2>
           </div>
-          <div className="space-y-8">
+          <div className="space-y-4 md:space-y-8">
             {[
               { q: 'What makes GreenSide different?', a: 'I\'m a local designer in Lacey, WA, dedicated to helping small businesses grow. You get a partner who genuinely cares about your success — not a faceless agency.' },
               { q: 'How long does a website take?', a: 'Most sites are live in 3-5 days from our first conversation. That includes an initial build, a round for you to review and request changes, and final polish before launch.' },
               { q: 'Can I make changes after launch?', a: 'Absolutely. Once you\'re on a moderation plan, updates are always just a message away. Just reach out anytime and I\'ll take care of it.' },
             ].map((item, i) => (
-              <div key={i} className="border-b border-border pb-8 last:border-0">
+              <div key={i} className="border-b border-border pb-4 md:pb-8 last:border-0">
                 <h3 className="font-display text-xl font-bold mb-3">{item.q}</h3>
                 <p className="font-body text-sm text-mercury/40 leading-relaxed">{item.a}</p>
               </div>

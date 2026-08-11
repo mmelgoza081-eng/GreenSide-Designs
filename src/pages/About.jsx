@@ -28,12 +28,17 @@ function ValueCard({ value, index }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   const Icon = value.icon;
+  // Scroll-reveal animation was glitching on mobile (briefly flashing
+  // content invisible instead of a clean bounce-in) — skipping it there and
+  // just rendering the final state immediately sidesteps whatever's causing
+  // that, while leaving desktop's animation exactly as it was.
+  const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      initial={isMobileViewport ? false : { opacity: 0, y: 40 }}
+      animate={isMobileViewport ? { opacity: 1, y: 0 } : (isInView ? { opacity: 1, y: 0 } : {})}
       transition={{ duration: 0.8, delay: index * 0.15 }}
       className="border border-border bg-card rounded-lg p-8 md:p-10 hover:shadow-lg hover:border-velvet/30 transition-all duration-300"
     >
@@ -51,6 +56,11 @@ export default function About() {
   const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
   const storyRef = useRef(null);
   const storyInView = useInView(storyRef, { once: true, margin: "-80px" });
+  // Same mobile scroll-reveal glitch as ValueCard below — content briefly
+  // flashing invisible instead of bouncing in cleanly. Mobile just renders
+  // everything in its final, visible state immediately; desktop keeps the
+  // original scroll-triggered bounce untouched.
+  const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <div className="relative">
@@ -58,15 +68,15 @@ export default function About() {
       <PageSpaceHeader theme="blue">
         <div ref={headerRef}>
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={headerInView ? { opacity: 1 } : {}}
+            initial={isMobileViewport ? false : { opacity: 0 }}
+            animate={isMobileViewport ? { opacity: 1 } : (headerInView ? { opacity: 1 } : {})}
             className="font-mono text-xs uppercase tracking-[0.3em] text-sky-300/80 mb-6"
           >
             About Us
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            initial={isMobileViewport ? false : { opacity: 0, y: 30 }}
+            animate={isMobileViewport ? { opacity: 1, y: 0 } : (headerInView ? { opacity: 1, y: 0 } : {})}
             transition={{ delay: 0.1, duration: 0.8 }}
             className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] max-w-4xl text-white"
           >
@@ -75,13 +85,17 @@ export default function About() {
         </div>
       </PageSpaceHeader>
 
-      {/* Story section */}
-      <section className="py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+      {/* Story section — the colored background runs the full width of the
+          page; only the content inside stays centered at 1440px. */}
+      <section
+        className="py-24 md:py-32"
+        style={{ background: 'linear-gradient(160deg, #dbeafe 0%, #e0f2fe 30%, #ecfeff 60%, #f0f9ff 100%)' }}
+      >
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <motion.div
             ref={storyRef}
-            initial={{ opacity: 0, x: -40 }}
-            animate={storyInView ? { opacity: 1, x: 0 } : {}}
+            initial={isMobileViewport ? false : { opacity: 0, x: -40 }}
+            animate={isMobileViewport ? { opacity: 1, x: 0 } : (storyInView ? { opacity: 1, x: 0 } : {})}
             transition={{ duration: 0.8 }}
             className="order-2 md:order-1"
           >
@@ -109,8 +123,8 @@ export default function About() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={storyInView ? { opacity: 1, x: 0 } : {}}
+            initial={isMobileViewport ? false : { opacity: 0, x: 40 }}
+            animate={isMobileViewport ? { opacity: 1, x: 0 } : (storyInView ? { opacity: 1, x: 0 } : {})}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="order-1 md:order-2"
           >
@@ -134,29 +148,39 @@ export default function About() {
       </section>
 
       {/* Values */}
-      <section className="py-24 px-6 md:px-12 max-w-[1440px] mx-auto border-t border-border">
-        <div className="mb-16">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-velvet mb-4">Why Us</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold">What sets us apart.</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {values.map((value, i) => (
-            <ValueCard key={value.title} value={value} index={i} />
-          ))}
+      <section
+        className="py-24 border-t border-border"
+        style={{ background: 'linear-gradient(160deg, #f0f9ff 0%, #ecfeff 0%, #dbeafe 60%, #eff6ff 100%)' }}
+      >
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+          <div className="mb-16">
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-velvet mb-4">Why Us</p>
+            <h2 className="font-display text-4xl md:text-5xl font-bold">What sets us apart.</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {values.map((value, i) => (
+              <ValueCard key={value.title} value={value} index={i} />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 md:py-32 px-6 md:px-12 max-w-[1440px] mx-auto border-t border-border text-center">
-        <h2 className="font-display text-4xl md:text-6xl font-bold mb-8 max-w-2xl mx-auto leading-[1.1]">
-          Let's build something <span className="text-velvet italic">together.</span>
-        </h2>
-        <Link
-          to="/contact"
-          className="inline-block font-mono text-xs uppercase tracking-[0.15em] bg-velvet text-white px-10 py-5 hover:bg-velvet/80 transition-all duration-300"
-        >
-          Start a Conversation
-        </Link>
+      <section
+        className="py-24 md:py-32 border-t border-border text-center"
+        style={{ background: 'linear-gradient(160deg, #eff6ff 0%, #dbeafe 50%, #e0f2fe 100%)' }}
+      >
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+          <h2 className="font-display text-4xl md:text-6xl font-bold mb-8 max-w-2xl mx-auto leading-[1.1]">
+            Let's build something <span className="text-velvet italic">together.</span>
+          </h2>
+          <Link
+            to="/contact"
+            className="inline-block font-mono text-xs uppercase tracking-[0.15em] bg-velvet text-white px-10 py-5 hover:bg-velvet/80 transition-all duration-300"
+          >
+            Start a Conversation
+          </Link>
+        </div>
       </section>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import {
   AMPLITUDE_PX,
@@ -46,27 +46,18 @@ function WaterSparkle({ bgPosition }) {
   );
 }
 
-// The visible circle's radius grows via `scale` around a fixed center point
-// (left:50%, top:129% + half its own unscaled height, in the sticky
-// container's own box — see the circle's inline style below). Given that
-// scale, this returns a CSS clip-path circle in the *viewport's* coordinate
-// space (sticky container == viewport once pinned).
-function circleClipPath(scale) {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const cx = 0.5 * vw;
-  const cy = 1.29 * vh + 0.58 * vw;
-  const r = 0.58 * vw * scale;
-  return { cx, cy, r, css: `circle(${r}px at ${cx}px ${cy}px)` };
-}
+const HEADLINE_TEXT = 'No detours. Just a straight line to launch.';
+const PARAGRAPH_TEXT = "We're committed to building custom websites shaped around your business's specific needs — not a template with your logo dropped in. Every site we build starts with understanding what you actually do and who you're trying to reach.";
 
 export default function Section2NeonMountains() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
   // Raw scroll progress steps unevenly between trackpad wheel events (each
   // one is a small, irregular delta) in a way mouse-wheel scrolling doesn't
   // show as clearly. Springing it smooths that out into continuous motion
-  // regardless of how choppy the underlying input events are.
+  // regardless of how choppy the underlying input events are. This still
+  // drives the *visible circle* on both devices — it should look fluid.
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 });
 
   // Biased down so the frame is mostly the detailed reflection and sun
@@ -80,85 +71,126 @@ export default function Section2NeonMountains() {
   // (shortened below) instead of completing early and then sitting there
   // waiting through extra scroll before the next page actually shows up.
   const transitionOpacity = useTransform(smoothProgress, [0.22, 0.42], [0, 1]);
-  const transitionScale = useTransform(smoothProgress, [0.2, 0.85], [0.4, 3]);
+  // Max scale needs enough headroom to actually reach the text on narrow,
+  // tall phone screens — at 3, the circle's edge topped out around
+  // 600-700px down the screen while the text sits around 325-370px, so it
+  // never got there. Mobile-only, though: this max sets how fast the circle
+  // grows per unit of scroll (same input range either way), so raising it
+  // for everyone made desktop's transition rush past twice as fast for the
+  // same scroll distance. Desktop already reaches the text fine at 3, so it
+  // keeps that original pace.
+  const transitionScale = useTransform(smoothProgress, [0.2, 0.85], [0.4, isMobileViewport ? 6 : 3]);
+  // The dots live inside the circle, so its own `scale` transform inflates
+  // them (and their blur) right along with it — by the time the circle is
+  // big, they'd render several times bigger/blurrier than Section3's actual
+  // dots below. Counter-scaling each dot by exactly 1/scale cancels that
+  // out perfectly (parent scale s times child scale 1/s = 1), so a dot
+  // always renders at its own true declared size no matter how big the
+  // circle gets — this must NOT be floored/clamped: a floor stops the
+  // cancellation from tracking the parent past a certain scale, so the
+  // dots (and their blur) grow larger and fuzzier the further the circle
+  // scales past that point, which is the opposite of matching Section3.
+  const dotCounterScale = useTransform(transitionScale, (s) => 1 / Math.max(s, 0.1));
 
-  // Black copies of the headline/paragraph are stacked exactly on top of the
-  // white originals and clipped to the same growing circle the eye actually
-  // sees — so a letter turns black at the literal instant the circle's edge
-  // reaches its pixels, not on a fixed scroll-position guess. Each text
-  // block's own on-screen offset (measured below) converts the shared,
-  // viewport-space circle into that element's local clip-path coordinates.
-  // Driven imperatively (transitionScale.on('change', ...) + a direct style
-  // write) rather than another useTransform: a useTransform derived from
-  // transitionScale only recomputes on the *next* value it receives from its
-  // own subscription, so it stays on its initial (pre-measurement) output
-  // until real scrolling starts. Writing the style directly on every change
-  // — and once right after measuring — keeps it correct immediately too.
-  const headlineWrapRef = useRef(null);
-  const paragraphWrapRef = useRef(null);
-  const headlineBlackRef = useRef(null);
-  const paragraphBlackRef = useRef(null);
+  // The headline/paragraph turn black by literally being clipped by a real
+  // circle — a solid black duplicate of the text sits underneath a
+  // border-radius:50%/overflow:hidden mask with the exact same geometry and
+  // `scale` as the visible circle, so only the portion inside the true,
+  // currently-rendered circle shows through. This is the same clipping
+  // mechanism the circle+dots above already use without issue, just reused
+  // for text — deliberately NOT a background-clip:text gradient or
+  // mix-blend-mode: both were tried and both failed for real, different
+  // reasons: the gradient approach reads visibly gray while active (Chrome
+  // renders masked/background-clipped text through a lower-quality path
+  // while its background keeps changing frame to frame, even at literal
+  // #ffffff), and mix-blend-mode silently fails to apply at all inside a
+  // position: sticky ancestor on iOS Safari. Plain overflow:hidden clipping
+  // has neither problem, and — unlike the earlier per-letter approximation
+  // — it's pixel-perfect: it's the real circle's real rendered shape, not a
+  // per-letter estimate of where its edge is.
+  //
+  // Getting a full-size (100vw x 100vh) copy of the text to render at the
+  // correct on-screen position from *inside* a scaled clip circle needs one
+  // more piece of geometry: a middle wrapper exactly matching the clip
+  // circle's own box (via inset: 0, so it shares the same center point) and
+  // counter-scaled by dotCounterScale, the same 1/s value already used for
+  // the dots above. Composing scale(s) then scale(1/s) about the same
+  // center is the identity transform for every point in the box, not just
+  // its center — so once the counter-scale cancels the outer's scale, that
+  // middle wrapper's own natural (pre-transform) box is a *fixed* reference
+  // frame, unaffected by scroll, sized to the clip circle's own natural
+  // dimensions (left: 50% - 58% = -8vw, top: 129vh, since those come from
+  // percentages of a container whose own size is what's fixed here, not
+  // from `s`). A plain, static, JS-free CSS offset (left: 8vw, top: -129vh)
+  // inside that fixed frame is therefore enough to land a 100vw x 100vh
+  // inner layer exactly back at the sticky container's own (0,0) origin —
+  // where the real text already sits — regardless of scroll position.
   const stickyRef = useRef(null);
-  const headlineOffset = useRef(null);
-  const paragraphOffset = useRef(null);
-
-  useEffect(() => {
-    const applyClip = (scale) => {
-      // window.innerWidth/Height can read 0 for the very first tick or two
-      // right after mount (before the viewport has actually settled) —
-      // skip rather than lock in a bogus circle(0) from that instant.
-      if (!window.innerWidth || !window.innerHeight) return;
-      const { cx, cy, r } = circleClipPath(scale);
-      if (headlineBlackRef.current && headlineOffset.current) {
-        const css = `circle(${r}px at ${cx - headlineOffset.current.left}px ${cy - headlineOffset.current.top}px)`;
-        headlineBlackRef.current.style.clipPath = css;
-        headlineBlackRef.current.style.webkitClipPath = css;
-      }
-      if (paragraphBlackRef.current && paragraphOffset.current) {
-        const css = `circle(${r}px at ${cx - paragraphOffset.current.left}px ${cy - paragraphOffset.current.top}px)`;
-        paragraphBlackRef.current.style.clipPath = css;
-        paragraphBlackRef.current.style.webkitClipPath = css;
-      }
-    };
-
-    const measure = () => {
-      const stickyRect = stickyRef.current?.getBoundingClientRect();
-      if (!stickyRect) return;
-      const hRect = headlineWrapRef.current?.getBoundingClientRect();
-      const pRect = paragraphWrapRef.current?.getBoundingClientRect();
-      if (hRect) headlineOffset.current = { left: hRect.left - stickyRect.left, top: hRect.top - stickyRect.top };
-      if (pRect) paragraphOffset.current = { left: pRect.left - stickyRect.left, top: pRect.top - stickyRect.top };
-      applyClip(transitionScale.get());
-    };
-
-    measure();
-    // A few retries (not just one) so a viewport that isn't settled yet on
-    // the first tick still gets a valid measurement shortly after mount.
-    const timeouts = [0, 100, 300, 800].map((delay) => setTimeout(measure, delay));
-    window.addEventListener('resize', measure);
-    const unsubscribe = transitionScale.on('change', applyClip);
-    return () => {
-      timeouts.forEach(clearTimeout);
-      window.removeEventListener('resize', measure);
-      unsubscribe();
-    };
-  }, [transitionScale]);
 
   // Same dot field as the actual white "What We Do" section below — so as
   // the circle opens, it's genuinely revealing that page's own look, not a
-  // plain gradient standing in for it. Positioned as % of this circle's own
-  // box, so they scale up together with it and stay properly clipped to
-  // whatever portion of the circle is currently visible.
-  const transitionDots = useMemo(() => (
-    Array.from({ length: 40 }).map((_, i) => ({
+  // plain gradient standing in for it. Size and drift ranges are identical
+  // to Section3's dots (not reduced for mobile) so the two fields are
+  // visually indistinguishable once they meet — with dotCounterScale now
+  // exactly cancelling the circle's own scale, a dot's on-screen size is
+  // just its declared px size regardless of viewport or circle scale, so
+  // there's no longer a reason for these to differ from Section3's.
+  // Count is much higher than Section3's, deliberately: these are spread
+  // uniformly across the circle's own 116%-of-viewport-wide box, most of
+  // which sits below/beyond the actual viewport (the box exists to grow a
+  // circle out of, not to be seen edge-to-edge) — so only a fraction of
+  // however many are placed ever land somewhere currently visible/unclipped
+  // at once. Section3's dots don't have that "wasted" fraction, since
+  // they're spread across a plain viewport-sized section where all of them
+  // are potentially visible — matching count 1:1 between the two reads as
+  // noticeably sparser here than there.
+  const transitionDots = useMemo(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    return Array.from({ length: isMobile ? 160 : 260 }).map((_, i) => ({
       id: i,
       top: Math.random() * 100,
       left: Math.random() * 100,
       size: Math.random() * 10 + 4,
       delay: Math.random() * 4,
       duration: Math.random() * 3 + 2.5,
-    }))
-  ), []);
+      driftX: 20 + Math.random() * 40,
+      driftY: 20 + Math.random() * 40,
+      driftDuration: 6 + Math.random() * 8,
+    }));
+  }, []);
+
+  // The actual (white) content — rendered once, reused for both the base
+  // layer and, in black, the clipped overlay layer, so the two can never
+  // drift out of sync with each other structurally.
+  const textContent = (color) => (
+    <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+      <p
+        className="font-mono text-base md:text-lg uppercase tracking-[0.3em] text-sky-200/90 mb-4"
+        style={{ color: color === 'black' ? 'transparent' : undefined }}
+      >
+        From idea to launch
+      </p>
+      <h2
+        className="font-display text-3xl md:text-5xl font-bold leading-tight max-w-lg"
+        style={{
+          textShadow: color === 'black' ? 'none' : '0 2px 20px rgba(0,0,0,0.5)',
+          color: color === 'black' ? '#0a0a0a' : '#ffffff',
+        }}
+      >
+        {HEADLINE_TEXT}
+      </h2>
+      <p
+        className="font-body text-sm md:text-base leading-relaxed max-w-md mt-5"
+        style={{
+          opacity: color === 'black' ? 1 : 0.85,
+          textShadow: color === 'black' ? 'none' : '0 2px 12px rgba(0,0,0,0.6)',
+          color: color === 'black' ? '#0a0a0a' : '#ffffff',
+        }}
+      >
+        {PARAGRAPH_TEXT}
+      </p>
+    </div>
+  );
 
   return (
     <section
@@ -197,70 +229,94 @@ export default function Section2NeonMountains() {
           style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.25) 100%)' }}
         />
 
-        <motion.div
-          className="absolute pointer-events-none overflow-hidden"
-          style={{
-            left: '50%', top: '129%', width: '116%', aspectRatio: '1/1', marginLeft: '-58%',
-            borderRadius: '50%',
-            background: '#ffffff',
-            boxShadow: '0 0 50px 14px rgba(191,219,254,0.7), 0 0 130px 36px rgba(147,197,253,0.4)',
-            opacity: transitionOpacity,
-            scale: transitionScale,
-          }}
-        >
-          {/* The dot field inside the circle is what looked bad on phones —
-              the circle itself stays, just without these. Section3's own
-              dot field (the actual "bottom page") is untouched. */}
-          {transitionDots.map(d => (
+        <div className="relative w-full h-full">
+          <motion.div
+            className="absolute pointer-events-none overflow-hidden"
+            style={{
+              left: '50%', top: '129%', width: '116%', aspectRatio: '1/1', marginLeft: '-58%',
+              borderRadius: '50%',
+              background: '#ffffff',
+              boxShadow: '0 0 50px 14px rgba(191,219,254,0.7), 0 0 130px 36px rgba(147,197,253,0.4)',
+              opacity: transitionOpacity,
+              scale: transitionScale,
+            }}
+          >
+            {transitionDots.map(d => (
+              <motion.div
+                key={d.id}
+                className="absolute rounded-full"
+                style={{
+                  top: `${d.top}%`,
+                  left: `${d.left}%`,
+                  width: d.size,
+                  height: d.size,
+                  background: '#0a0a0a',
+                  boxShadow: '0 0 10px 2px rgba(0,0,0,0.5)',
+                  scale: dotCounterScale,
+                }}
+                animate={{
+                  opacity: [0.75, 1, 0.75],
+                  x: [0, d.driftX, -d.driftX * 0.4, 0],
+                  y: [0, -d.driftY, d.driftY * 0.5, 0],
+                }}
+                transition={{
+                  opacity: { repeat: Infinity, duration: d.duration, delay: d.delay, ease: 'easeInOut' },
+                  x: { repeat: Infinity, duration: d.driftDuration, delay: d.delay, ease: 'easeInOut' },
+                  y: { repeat: Infinity, duration: d.driftDuration * 1.15, delay: d.delay, ease: 'easeInOut' },
+                }}
+              />
+            ))}
+          </motion.div>
+
+          {/* Base layer: the real, always-white text. Plain color, never
+              masked, so it's always exactly as crisp as normal text. */}
+          {textContent('white')}
+
+          {/* Overlay: a solid black duplicate, visible only through a real
+              circular clip sharing the visible circle's exact geometry —
+              see the long comment above for how the inner content escapes
+              the clip circle's own scaled/offset coordinate space. z-20 (vs.
+              the base text layer's own z-10, reused via the same
+              textContent() helper) guarantees this paints on top of it
+              regardless of DOM order, so the clipped black portion actually
+              covers the white text instead of sitting under it. */}
+          <motion.div
+            aria-hidden="true"
+            className="absolute z-20 pointer-events-none overflow-hidden"
+            style={{
+              left: '50%', top: '129%', width: '116%', aspectRatio: '1/1', marginLeft: '-58%',
+              borderRadius: '50%',
+              opacity: transitionOpacity,
+              scale: transitionScale,
+              // Mobile only: the text inside renders through two nested
+              // transforms (this circle's own scale, up to 6x, plus the
+              // counter-scale below cancelling it back out) — mobile
+              // Safari's compositor rasterizes text blurrily and slightly
+              // unstably through that kind of compound transform, far more
+              // noticeably than desktop Chrome. These are separate hint
+              // properties, not the transform itself (which Framer already
+              // owns via the `scale` key above), so they can't conflict
+              // with it — they just tell the compositor to give this layer
+              // its own stable, backface-culled GPU surface instead of
+              // repeatedly re-rasterizing it as part of the parent's paint.
+              ...(isMobileViewport ? { willChange: 'transform', WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' } : {}),
+            }}
+          >
             <motion.div
-              key={d.id}
-              className="hidden md:block absolute rounded-full"
+              className="absolute inset-0"
               style={{
-                top: `${d.top}%`,
-                left: `${d.left}%`,
-                width: d.size,
-                height: d.size,
-                background: '#0a0a0a',
-                boxShadow: '0 0 10px 2px rgba(0,0,0,0.5)',
+                scale: dotCounterScale,
+                ...(isMobileViewport ? { willChange: 'transform', WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' } : {}),
               }}
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ repeat: Infinity, duration: d.duration, delay: d.delay, ease: 'easeInOut' }}
-            />
-          ))}
-        </motion.div>
-
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
-          <p className="font-mono text-base md:text-lg uppercase tracking-[0.3em] text-sky-200/90 mb-4">From idea to launch</p>
-
-          <div ref={headlineWrapRef} className="relative max-w-lg">
-            <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight text-white" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>
-              No detours. Just a straight line to launch.
-            </h2>
-            {/* Black reveal copy only matters where the circle transition
-                actually plays — hidden below md so mobile text stays white. */}
-            <h2
-              ref={headlineBlackRef}
-              aria-hidden="true"
-              className="hidden md:block font-display text-3xl md:text-5xl font-bold leading-tight absolute inset-0"
-              style={{ color: '#0a0a0a', clipPath: 'circle(0px at 0px 0px)' }}
             >
-              No detours. Just a straight line to launch.
-            </h2>
-          </div>
-
-          <div ref={paragraphWrapRef} className="relative max-w-md mt-5">
-            <p className="font-body text-sm md:text-base leading-relaxed text-white" style={{ opacity: 0.85, textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
-              We're committed to building custom websites shaped around your business's specific needs — not a template with your logo dropped in. Every site we build starts with understanding what you actually do and who you're trying to reach.
-            </p>
-            <p
-              ref={paragraphBlackRef}
-              aria-hidden="true"
-              className="hidden md:block font-body text-sm md:text-base leading-relaxed absolute inset-0"
-              style={{ color: '#0a0a0a', clipPath: 'circle(0px at 0px 0px)' }}
-            >
-              We're committed to building custom websites shaped around your business's specific needs — not a template with your logo dropped in. Every site we build starts with understanding what you actually do and who you're trying to reach.
-            </p>
-          </div>
+              <div
+                className="absolute"
+                style={{ left: '8vw', top: '-129vh', width: '100vw', height: '100vh' }}
+              >
+                {textContent('black')}
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>
