@@ -85,7 +85,7 @@ function BasicCard({ index }) {
       <Link
         to="/contact"
         onClick={scrollToTop}
-        className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 rounded-full"
+        className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 border border-velvet text-velvet hover:bg-velvet hover:text-white transition-all duration-300 rounded-full"
       >
         Get Now <ArrowRight className="w-3.5 h-3.5" />
       </Link>
@@ -277,7 +277,7 @@ function BundleCard({ index }) {
           <Link
             to="/contact"
             onClick={scrollToTop}
-            className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 bg-velvet text-white hover:bg-velvet/80 transition-all duration-300 mt-auto rounded-full"
+            className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.15em] px-6 py-4 md:px-8 md:py-5 bg-amber-500 text-white hover:bg-amber-500/80 transition-all duration-300 mt-auto rounded-full"
           >
             Get Now <ArrowRight className="w-3.5 h-3.5" />
           </Link>
