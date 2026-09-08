@@ -74,7 +74,7 @@ function ColumnBox({ col, color, index }) {
       initial={{ opacity: 0, scale: 0.5, y: 20 }}
       animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
       transition={{ type: 'spring', stiffness: 260, damping: 12, delay: index * 0.15 }}
-      className="rounded-2xl p-6 md:p-7"
+      className="rounded-xl md:rounded-2xl p-3 md:p-7"
       style={{
         border: `1px solid ${color === 'black' ? 'rgba(10,10,10,0.15)' : 'rgba(255,255,255,0.2)'}`,
         background: color === 'black' ? 'rgba(10,10,10,0.04)' : 'rgba(255,255,255,0.06)',
@@ -82,7 +82,7 @@ function ColumnBox({ col, color, index }) {
       }}
     >
       <p
-        className="font-mono text-sm md:text-base uppercase tracking-[0.2em] mb-3 font-semibold"
+        className="font-mono text-[10px] md:text-base uppercase tracking-[0.15em] md:tracking-[0.2em] mb-1.5 md:mb-3 font-semibold"
         style={{
           opacity: color === 'black' ? 1 : 0.9,
           color: '#0a0a0a',
@@ -91,7 +91,7 @@ function ColumnBox({ col, color, index }) {
         {col.title}
       </p>
       <p
-        className="font-body text-base md:text-lg lg:text-xl leading-relaxed"
+        className="font-body text-xs md:text-lg lg:text-xl leading-snug md:leading-relaxed"
         style={{
           opacity: color === 'black' ? 1 : 0.85,
           textShadow: color === 'black' ? 'none' : '0 2px 12px rgba(0,0,0,0.6)',
@@ -220,7 +220,7 @@ export default function Section2NeonMountains() {
   const textContent = (color) => (
     <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 md:px-12 -translate-y-[8vh] md:-translate-y-[10vh]">
       <p
-        className="font-mono text-3xl md:text-4xl lg:text-5xl uppercase tracking-[0.3em] text-sky-200/90 mb-6"
+        className="font-mono text-base sm:text-xl md:text-4xl lg:text-5xl uppercase tracking-[0.15em] md:tracking-[0.3em] text-sky-200/90 mb-4 md:mb-6"
         style={{ color: color === 'black' ? 'transparent' : undefined }}
       >
         Gutter Cleaning Done Right
@@ -234,7 +234,7 @@ export default function Section2NeonMountains() {
       >
         {HEADLINE_TEXT}
       </h2>
-      <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16">
+      <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8 mt-6 md:mt-16">
         {COLUMNS.map((col, i) => (
           <ColumnBox key={i} col={col} color={color} index={i} />
         ))}
