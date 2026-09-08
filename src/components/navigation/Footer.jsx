@@ -42,10 +42,10 @@ export default function Footer() {
         <div className="py-20 border-b border-white/10">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
             <div className="md:col-span-5">
-              <h2 className="font-display text-5xl md:text-6xl font-bold tracking-tight mb-6 text-white">GreenSide Designs</h2>
+              <h2 className="font-display text-5xl md:text-6xl font-bold tracking-tight mb-6 text-white">Green Gutters</h2>
               <p className="font-body text-base text-white/50 max-w-sm leading-relaxed mb-8">
-                Crafting digital experiences for small businesses. 
-                Based in Lacey, WA — serving clients everywhere.
+                Professional gutter cleaning for homes of every size.
+                Based in Lacey, WA — serving the surrounding area.
               </p>
               <Link
                 to="/contact"
@@ -98,7 +98,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="py-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-mono text-xs text-white/30 tracking-wider">
-            © {new Date().getFullYear()} GREENSIDE DESIGNS — ALL RIGHTS RESERVED
+            © {new Date().getFullYear()} GREEN GUTTERS — ALL RIGHTS RESERVED
           </p>
           <p className="font-mono text-xs text-white/30 tracking-wider">
             LACEY, WA · USA

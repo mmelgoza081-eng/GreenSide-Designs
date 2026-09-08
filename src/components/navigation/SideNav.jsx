@@ -27,6 +27,13 @@ export default function SideNav() {
 
   return (
     <>
+      <div
+        className="hidden lg:block absolute top-6 right-6 lg:right-10 z-50 text-white/60"
+        style={{ fontFamily: "'Dancing Script', cursive" }}
+      >
+        <span className="text-base">By GreenSide Designs</span>
+      </div>
+
       <div className="hidden lg:flex absolute top-1/2 right-6 lg:right-10 z-50 flex-col items-end gap-5 -translate-y-1/2">
         {links.map(link => (
           <Link

@@ -73,7 +73,7 @@ export default function Section3GlowingDots() {
       <motion.div style={{ scale: contentScale, opacity: contentOpacity }} className="relative z-10 text-center px-6 max-w-2xl">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-emerald-600 mb-6">What We Do</p>
         <h2 className="font-display text-4xl md:text-6xl font-bold leading-[1.1] text-foreground">
-          We build websites that make you <span className="text-velvet italic">impossible</span> to ignore.
+          We keep your gutters <span className="text-velvet italic">clean</span> so your home stays protected.
         </h2>
       </motion.div>
     </section>

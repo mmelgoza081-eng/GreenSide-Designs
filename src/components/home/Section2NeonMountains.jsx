@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform, useInView } from 'framer-motion';
 import {
   AMPLITUDE_PX,
   DURATION_S,
@@ -46,8 +46,63 @@ function WaterSparkle({ bgPosition }) {
   );
 }
 
-const HEADLINE_TEXT = 'No detours. Just a straight line to launch.';
-const PARAGRAPH_TEXT = "We're committed to building custom websites shaped around your business's specific needs — not a template with your logo dropped in. Every site we build starts with understanding what you actually do and who you're trying to reach.";
+const HEADLINE_TEXT = 'No clogs. No overflow. Just clean gutters.';
+const COLUMNS = [
+  {
+    title: 'Our Service',
+    text: "We remove leaves, debris, and buildup from every gutter and downspout, restoring proper water flow around your home.",
+  },
+  {
+    title: 'Why Choose Us',
+    text: "Local, reliable, and thorough — we show up on time and don't cut corners. Your gutters get done right, every visit.",
+  },
+  {
+    title: 'What We Do',
+    text: "From single-story homes to three-story properties, we inspect, clean, and flush your entire gutter system top to bottom.",
+  },
+];
+
+// Each column pops in with a springy overshoot the first time it scrolls
+// into view, rather than fading in flat like the rest of this section.
+function ColumnBox({ col, color, index }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.5, y: 20 }}
+      animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+      transition={{ type: 'spring', stiffness: 260, damping: 12, delay: index * 0.15 }}
+      className="rounded-2xl p-6 md:p-7"
+      style={{
+        border: `1px solid ${color === 'black' ? 'rgba(10,10,10,0.15)' : 'rgba(255,255,255,0.2)'}`,
+        background: color === 'black' ? 'rgba(10,10,10,0.04)' : 'rgba(255,255,255,0.06)',
+        backdropFilter: color === 'black' ? 'none' : 'blur(2px)',
+      }}
+    >
+      <p
+        className="font-mono text-sm md:text-base uppercase tracking-[0.2em] mb-3 font-semibold"
+        style={{
+          opacity: color === 'black' ? 1 : 0.9,
+          color: '#0a0a0a',
+        }}
+      >
+        {col.title}
+      </p>
+      <p
+        className="font-body text-base md:text-lg lg:text-xl leading-relaxed"
+        style={{
+          opacity: color === 'black' ? 1 : 0.85,
+          textShadow: color === 'black' ? 'none' : '0 2px 12px rgba(0,0,0,0.6)',
+          color: color === 'black' ? '#0a0a0a' : '#ffffff',
+        }}
+      >
+        {col.text}
+      </p>
+    </motion.div>
+  );
+}
 
 export default function Section2NeonMountains() {
   const ref = useRef(null);
@@ -163,15 +218,15 @@ export default function Section2NeonMountains() {
   // layer and, in black, the clipped overlay layer, so the two can never
   // drift out of sync with each other structurally.
   const textContent = (color) => (
-    <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+    <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 md:px-12 -translate-y-[8vh] md:-translate-y-[10vh]">
       <p
-        className="font-mono text-base md:text-lg uppercase tracking-[0.3em] text-sky-200/90 mb-4"
+        className="font-mono text-3xl md:text-4xl lg:text-5xl uppercase tracking-[0.3em] text-sky-200/90 mb-6"
         style={{ color: color === 'black' ? 'transparent' : undefined }}
       >
-        From idea to launch
+        Gutter Cleaning Done Right
       </p>
       <h2
-        className="font-display text-3xl md:text-5xl font-bold leading-tight max-w-lg"
+        className="font-display text-xl md:text-2xl lg:text-3xl font-bold leading-tight max-w-4xl"
         style={{
           textShadow: color === 'black' ? 'none' : '0 2px 20px rgba(0,0,0,0.5)',
           color: color === 'black' ? '#0a0a0a' : '#ffffff',
@@ -179,16 +234,11 @@ export default function Section2NeonMountains() {
       >
         {HEADLINE_TEXT}
       </h2>
-      <p
-        className="font-body text-sm md:text-base leading-relaxed max-w-md mt-5"
-        style={{
-          opacity: color === 'black' ? 1 : 0.85,
-          textShadow: color === 'black' ? 'none' : '0 2px 12px rgba(0,0,0,0.6)',
-          color: color === 'black' ? '#0a0a0a' : '#ffffff',
-        }}
-      >
-        {PARAGRAPH_TEXT}
-      </p>
+      <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16">
+        {COLUMNS.map((col, i) => (
+          <ColumnBox key={i} col={col} color={color} index={i} />
+        ))}
+      </div>
     </div>
   );
 
